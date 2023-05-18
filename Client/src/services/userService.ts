@@ -22,7 +22,7 @@ export class UserService{
         
     }
 
-      public async newRegisterRequest(formData: any) {
+      public  newRegisterRequest(formData: any) {
            return this.httpClient.post(this.PATH_OF_API + '/newRegisterRequest', formData, { headers: this.headers })
             };
          

@@ -1,0 +1,76 @@
+
+.image{
+    width: 10%;
+    height: 60%;
+
+}
+
+.login-div{
+    height: max-content;  
+}
+
+.login-tab{
+    margin-bottom: 10px;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.background-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .image-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80%;
+    overflow: hidden;
+  }
+  
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit:cover;
+  }
+  
+  .image-wrapper:first-child {
+    left: 0;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    object-position: left top;
+
+  }
+  
+  .image-wrapper:last-child {
+    right: 0;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    object-position: right  bottom;
+
+  }
+  
+
+.body{
+    height: 98vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 249, 249, 0.349);
+
+}
+
+.profile{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-image: url("../../../assets/profile.jpg");
+    background-size: cover;
+    margin-top: 10px;
+}
