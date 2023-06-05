@@ -7,6 +7,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { StocksComponent } from './pages/stocks/stocks.component';
 import { ScheduleComponent } from './pages/schedule/schedule.component';
 import { AppComponent } from './app.component';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path : "users", pathMatch : "full", component : UsersComponent, canActivate : [AuthGuard]},
   { path : "stocks", pathMatch : "full", component : StocksComponent, canActivate : [AuthGuard]},
   { path : "schedule", pathMatch : "full", component : ScheduleComponent, canActivate : [AuthGuard]},
+  { path : "orders", pathMatch : "full", component : OrdersComponent, canActivate : [AuthGuard]},
   { path : "", pathMatch: 'full', redirectTo:"/home"},
   { path : "", component : AppComponent , canActivate : [AuthGuard] }
 

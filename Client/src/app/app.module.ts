@@ -18,6 +18,8 @@ import { ProductionLineComponent } from './pages/production-line/production-line
 import { SettingsComponent } from './pages/settings/settings.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { DialogComponent } from './components/dialog/dialog.component';
+import { CardComponent } from './components/card/card.component';
+import { OrdersComponent } from './pages/orders/orders.component';
 
 
 @NgModule({
@@ -32,6 +34,8 @@ import { DialogComponent } from './components/dialog/dialog.component';
     SettingsComponent,
     FooterComponent,
     DialogComponent,
+    CardComponent,
+    OrdersComponent,
     
   
   ],

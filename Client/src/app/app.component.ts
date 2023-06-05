@@ -28,4 +28,8 @@ export class AppComponent implements DoCheck{
     this.authService.clear();
     this.router.navigate(["/login"]);
   }
+
+  isActive(route: string): boolean {
+    return this.router.isActive(route, true);
+  }
 }

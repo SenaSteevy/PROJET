@@ -12,6 +12,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {MatCardModule} from '@angular/material/card';
         MatDialogModule,
         MatSelectModule,
         MatInputModule,
-        MatCardModule
+        MatCardModule,
+        MatDividerModule
     ],
     exports: [
         MatSidenavModule,
@@ -41,7 +43,8 @@ import {MatCardModule} from '@angular/material/card';
         MatDialogModule,
         MatSelectModule,
         MatInputModule,
-        MatCardModule
+        MatCardModule,
+        MatDividerModule
     ]
 })
 export class MaterialModule {

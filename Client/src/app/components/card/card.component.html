@@ -1,0 +1,8 @@
+
+<mat-card class="card"  [@pulseAnimation]="cardState" (mouseenter)="startAnimation()" (mouseleave)="stopAnimation()">
+    <img mat-card-image [src]="image"  class="card-image" [@imageSizeAnimation]="imageSizeState">
+    <mat-card-title class="title">{{title}}</mat-card-title>
+    <mat-card-content  [@fadeInAnimation]="contentState" *ngIf="onHover" >
+        <p>{{description}}</p>
+    </mat-card-content>
+</mat-card>
