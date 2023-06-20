@@ -13,6 +13,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
+
 
 
 @NgModule({
@@ -29,7 +37,13 @@ import {MatDividerModule} from '@angular/material/divider';
         MatSelectModule,
         MatInputModule,
         MatCardModule,
-        MatDividerModule
+        MatDividerModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatSortModule,
+        MatExpansionModule,
+        MatDatepickerModule,
     ],
     exports: [
         MatSidenavModule,
@@ -44,8 +58,16 @@ import {MatDividerModule} from '@angular/material/divider';
         MatSelectModule,
         MatInputModule,
         MatCardModule,
-        MatDividerModule
+        MatDividerModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatSortModule,
+        MatExpansionModule,
+        MatDatepickerModule,
+        
     ]
+   
 })
 export class MaterialModule {
 }

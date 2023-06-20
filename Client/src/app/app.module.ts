@@ -20,6 +20,17 @@ import { FooterComponent } from './components/footer/footer.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { CardComponent } from './components/card/card.component';
 import { OrdersComponent } from './pages/orders/orders.component';
+import { UserListComponent } from './components/user-list/user-list.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { UserFormComponent } from './components/user-form/user-form.component';
+import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-chart.component';
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
+import { LottieAnimationViewComponent } from './components/lottie-animation-view/lottie-animation-view.component';
+
+export function playerFactory() {
+  return player;
+}
 
 
 @NgModule({
@@ -36,8 +47,12 @@ import { OrdersComponent } from './pages/orders/orders.component';
     DialogComponent,
     CardComponent,
     OrdersComponent,
+    UserListComponent,
+    ConfirmDialogComponent,
+    UserFormComponent,
+    DoughnutChartComponent,
+    LottieAnimationViewComponent
     
-  
   ],
   imports: [
     BrowserModule,
@@ -48,6 +63,7 @@ import { OrdersComponent } from './pages/orders/orders.component';
     MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
+    LottieModule.forRoot({ player: playerFactory })
     
   ],
   entryComponents:[
