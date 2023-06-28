@@ -50,10 +50,24 @@ export class DoughnutChartComponent implements AfterViewInit, OnChanges, OnInit 
           animateRotate: true,
           animateScale: true
         },
-        cutout: 75
+        elements: {
+          arc: {
+            borderWidth: 0
+          }
+        },
+        cutout: '80%', // Adjust the cutout value to resize the doughnut chart (percentage or pixel value)
+        layout: {
+          padding: {
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: 10
+          }
+        }
       }
     });
   }
+  
 
   animateRate() {
     const increment = Math.ceil(this.rate / 30);

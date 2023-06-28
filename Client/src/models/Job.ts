@@ -1,13 +1,20 @@
-import { TaskDescription } from "./TaskDescription";
+import { Client } from "./Client";
+import { Resource } from "./Resource";
+import { Task } from "./Task";
 
 export interface Job {
     numOrder: number;
-    taskDescription: TaskDescription;
+    codeOrder : string,
+    client : Client,
+    description: string,
+    supplement : string,
     type: string;
-    dueDate: Date; // Change to appropriate date type if needed
+    dueDate: string; 
     taskList: Task[];
-    startDateTime: Date; // Change to appropriate date type if needed
-    leadTime: Date; // Change to appropriate duration type if needed
+    resource : Resource,
+    startDateTime: string; 
+    leadTime: string; 
     priority: number;
     status: string;
+    doneAt : string
   }

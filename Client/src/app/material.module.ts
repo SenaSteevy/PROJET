@@ -14,11 +14,12 @@ import { MatInputModule } from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatTableModule} from '@angular/material/table';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatSort, MatSortModule} from '@angular/material/sort';
+import { MatSortModule} from '@angular/material/sort';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'; // or MatMomentDateModule
 
 
 
@@ -44,6 +45,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
         MatSortModule,
         MatExpansionModule,
         MatDatepickerModule,
+        MatNativeDateModule
     ],
     exports: [
         MatSidenavModule,
@@ -65,6 +67,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
         MatSortModule,
         MatExpansionModule,
         MatDatepickerModule,
+        MatNativeDateModule
         
     ]
    

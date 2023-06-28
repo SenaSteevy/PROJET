@@ -27,6 +27,7 @@ import { DoughnutChartComponent } from './components/doughnut-chart/doughnut-cha
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 import { LottieAnimationViewComponent } from './components/lottie-animation-view/lottie-animation-view.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 export function playerFactory() {
   return player;
@@ -51,7 +52,8 @@ export function playerFactory() {
     ConfirmDialogComponent,
     UserFormComponent,
     DoughnutChartComponent,
-    LottieAnimationViewComponent
+    LottieAnimationViewComponent,
+    TaskListComponent
     
   ],
   imports: [

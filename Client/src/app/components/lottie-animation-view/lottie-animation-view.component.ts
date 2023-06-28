@@ -4,18 +4,21 @@ import { AnimationOptions } from 'ngx-lottie';
 @Component({
   selector: 'app-lottie-animation-view',
   template: `
-    <ng-lottie
+    <ng-lottie class="animation"
       [options]="animationOptions"
       [width]= "iconWidth"
       [height]="iconHeight"
     ></ng-lottie>
   `,
+    styleUrls: ['./lottie-animation-view.component.css']
+
 })
 export class LottieAnimationViewComponent implements OnInit {
   
   @Input() animationPath: string = '';
   @Input() iconWidth: string = '20';
   @Input() iconHeight: string = '20';
+  @Input() loop: boolean = false;
 
   animationOptions: AnimationOptions = {
     path: '',
@@ -26,6 +29,7 @@ export class LottieAnimationViewComponent implements OnInit {
   ngOnInit(): void {
     this.animationOptions = {
       ...this.animationOptions,
+      loop : this.loop,
       path : `/assets/lotties/${this.animationPath}`
     };
   }

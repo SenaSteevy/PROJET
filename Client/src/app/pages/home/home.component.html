@@ -1,19 +1,29 @@
-<div class="container" fxFlex fxLayout="column">
-    <h2 style="display: inline;"><mat-icon >home</mat-icon> Home</h2>
-    <div  fxFlex fxLayout="row wrap" fxLayoutGap="20px">
-        <app-card title = "Scheduler" image="../../../assets/images/loginPage-portrait-2.jpg" 
-        description="Visualize Schedule or make a new one." routerLink="/schedule"></app-card>
 
-        <app-card title = "Manage Users" image="../../../assets/images/loginPage-portrait-2.jpg" 
-        description="List All the app users, add more, update or delete anyone. Only for big roles ! " routerLink="/users"></app-card>
-
-        <app-card title = "Manage orders" image="../../../assets/images/loginPage-portrait-2.jpg" 
-        description="List All the orders received , add more, update or delete anyone." routerLink="/orders"></app-card>
-
-        <app-card title = "Manage Stocks" image="../../../assets/images/loginPage-portrait-2.jpg" 
-        description="Manage stocked resources, visualize them, schedule when new resources are coming in." routerLink="/stocks"></app-card>
-
-        <app-card title = "Settings" image="../../../assets/images/loginPage-portrait-2.jpg" 
-        description="Set the application parameters. Only for big roles !" routerLink="/stocks"></app-card>
+<ng-container *ngIf="loading; else content" >
+    <div class="lottie">
+     <app-lottie-animation-view  [iconWidth]="'30vw'" [iconHeight]="'10vh'" [animationPath]=" !!connectedUser? 'loading-grey.json': 'welcome.json'" [loop]="true"></app-lottie-animation-view>
     </div>
-</div>
+    <!-- Loading animation using LottieAnimationViewComponent -->
+  </ng-container>
+  
+<ng-template #content>
+    <div class="container" fxFlex fxLayout="column">
+        <h2 style="display: inline;"><mat-icon >home</mat-icon> Home</h2>
+        <div  fxFlex fxLayout="row wrap" fxLayoutGap="20px">
+            <app-card title = "Scheduler" image="../../../assets/images/loginPage-portrait-2.jpg" 
+            description="Visualize Schedule or make a new one." routerLink="/schedule"></app-card>
+    
+            <app-card title = "Manage Users" image="../../../assets/images/loginPage-portrait-2.jpg" 
+            description="List All the app users, add more, update or delete anyone. Only for big roles ! " routerLink="/users"></app-card>
+    
+            <app-card title = "Manage orders" image="../../../assets/images/loginPage-portrait-2.jpg" 
+            description="List All the orders received , add more, update or delete anyone." routerLink="/orders"></app-card>
+    
+            <app-card title = "Manage Stocks" image="../../../assets/images/loginPage-portrait-2.jpg" 
+            description="Manage stocked resources, visualize them, schedule when new resources are coming in." routerLink="/stocks"></app-card>
+    
+            <app-card title = "Settings" image="../../../assets/images/loginPage-portrait-2.jpg" 
+            description="Set the application parameters. Only for big roles !" routerLink="/stocks"></app-card>
+        </div>
+    </div>  
+</ng-template>

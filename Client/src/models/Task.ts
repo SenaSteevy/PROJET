@@ -7,5 +7,6 @@ export interface Task {
     phase: Phase;
     type: string;
     status: string;
-    startTime: Date; // Change to appropriate date type if needed
+    startTime: string; 
+    realStartTime: string;
   }

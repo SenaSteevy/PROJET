@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/services/userService';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-user-list',

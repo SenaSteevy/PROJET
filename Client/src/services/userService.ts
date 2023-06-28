@@ -12,6 +12,7 @@ export class UserService{
  
  
     connectedUser : any;
+    
     PATH_OF_API = "http://localhost:8081/api/user"
    
     headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', "Bearer "+this.authService.getToken()  )

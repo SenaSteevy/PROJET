@@ -4,6 +4,10 @@ import { Planning } from 'src/models/Planning';
 import { JobService } from 'src/services/jobService';
 import * as moment from 'moment';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Phase } from 'src/models/Phase';
+import { Job } from 'src/models/Job';
+import { Task } from 'src/models/Task';
+
 
 @Component({
   selector: 'app-schedule',
@@ -28,13 +32,22 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   plannings: Planning[] = [];
   private charts: Chart[] = [];
   lottieAnimations: boolean[] = [];
+  phases: Phase[] = [];
+  
+  selectedDate : Date = new  Date();
+  loading = true;
 
   constructor(private jobService: JobService) { 
     
   }
 
   ngOnInit() {
-   
+    this.loading = true
+    Chart.register(...registerables);
+    this.getAllphases(); 
+    this.loadPlannings();
+    
+
   }
 
   startLottieAnimation(index: number) {
@@ -46,23 +59,35 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    Chart.register(...registerables);
-    this.loadPlannings();
-    setTimeout(() => {
-      this.initializeCharts();
-    }, 300);
+    
 
   }
 
 
   loadPlannings() {
-    this.jobService.getAllPlannings().subscribe((plannings: Planning[]) => {
-      plannings.map( (planning) => { planning.createdAt = moment(planning.createdAt).format('MMM D, YYYY HH:mm')})
-      this.plannings = plannings;
-      this.initializeCharts();
 
-    });
-  }
+    this.jobService.getAllPlannings().subscribe((plannings: Planning[]) => {
+      console.log("plannings :",plannings)
+      plannings.map((planning) => {
+        planning.createdAt = moment(planning.createdAt).format('MMM D, YYYY HH:mm');
+      });
+      
+      // Filter plannings based on selected date
+      this.plannings = plannings.filter(planning =>
+        moment(planning.createdAt).isSame(this.selectedDate, 'day')
+      );      
+      
+      setTimeout(() => {
+        this.initializeCharts();
+        this.loading = false;
+      }, 300);
+
+  });
+}
+
+
+
+  
 
   initializeCharts() {
     this.chartCanvases.forEach((canvas, index) => {
@@ -161,7 +186,23 @@ export class ScheduleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
+
+  getAllphases(): void {
+     this.jobService.getAllPhases().subscribe({
+      next: (response) => {
+        this.phases = response
+         }
+     })
+     
   }
+
+  getTaskList(jobList : Job[]): Task[]{
+    let tasks : Task[] = []
+    jobList.forEach((job) => job.taskList.forEach((task) => tasks.push(task)))
+    return tasks
+    }
+
+ 
 }
+
+
