@@ -70,6 +70,9 @@ export class DoughnutChartComponent implements AfterViewInit, OnChanges, OnInit 
   
 
   animateRate() {
+    if(this.rate == 0 ){
+      return  
+     }
     const increment = Math.ceil(this.rate / 30);
     let currentRate = 0;
 

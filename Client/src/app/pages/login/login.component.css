@@ -18,6 +18,10 @@
     justify-content: center;
     
 }
+.button{
+  margin : 0.5rem 1rem;
+  border-radius: 20px;
+  }
 
 .background-container {
     position: relative;

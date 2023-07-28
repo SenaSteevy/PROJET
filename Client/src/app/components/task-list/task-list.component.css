@@ -10,4 +10,24 @@
     width:90%;
     height:90%;
 }
+.button{
+  margin : 0.5rem 1rem;
+  border-radius: 20px;
+  }
+
+table {
+    width: 100%;
+    font-weight: bold;
+    overflow: auto;
+  }
+
+  .button-actions{
+ 
+    margin-left: 5px;
+  }
+
+  .hover-row:hover {
+    background-color: #e0e0e0bb;
+    cursor: pointer;
+  }
 

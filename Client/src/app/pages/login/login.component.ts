@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { DialogComponent } from 'src/app/components/dialog/dialog.component';
+import { FileHandle } from 'src/models/FileHandle';
 import { AuthService } from 'src/services/authService';
 import { UserService } from 'src/services/userService';
 
@@ -17,7 +20,12 @@ export class LoginComponent implements OnInit {
   registerForm : any
   isRegistered : any = localStorage.getItem('isRegistered')
   error : any;
-  constructor(private authService : AuthService, private userService : UserService, private router : Router, public dialog: MatDialog) { }
+  constructor(private authService : AuthService, 
+    private userService : UserService, 
+    private router : Router, 
+    public dialog: MatDialog,
+    private _snackBar : MatSnackBar,
+    private sanitizer : DomSanitizer) { }
 
   ngOnInit(): void {
 
@@ -35,6 +43,9 @@ export class LoginComponent implements OnInit {
 
     })
 
+    if(this.authService.sessionExpired){
+      this.openSnackBar("Session expired. Please reconnect...")
+    }
     
   }
 
@@ -42,11 +53,13 @@ export class LoginComponent implements OnInit {
     
         this.userService.login(this.loginForm.value).subscribe({
         next : (response : any)  => { 
-              console.log(response)
+               
+              this.userService.connectedUser = response.user
               this.authService.setUser(response.user)
               this.authService.setRoles(response.user.roles)
               this.authService.setToken(response.jwtToken)
-              this.router.navigate(['/home'])
+              
+              this.router.navigate(['/home'])     
               },
         error : (error) =>{ console.log(error.message)
               this.error = error.message}
@@ -86,4 +99,11 @@ export class LoginComponent implements OnInit {
       localStorage.setItem("isRegistered", "yes")
     });
   }
+
+  openSnackBar(message : string) {
+    this._snackBar.open( message , '', {
+      duration: 2000
+    });
+  }
+  
 }

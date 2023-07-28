@@ -25,7 +25,7 @@
                                 <input matInput type="password" placeholder="Password" formControlName="password">
                             </mat-form-field>
                             <span *ngIf="!!error" color="warn" style="margin-bottom: 5px;"> Incorrect Username or Password.</span>
-                            <button mat-raised-button  [disabled]="loginForm.invalid" type="submit" color="primary">Log In</button>
+                            <button class="button" mat-raised-button  [disabled]="loginForm.invalid" type="submit" color="primary">Log In</button>
                         </form>
                     </mat-tab>
                 <mat-tab label="Register">
@@ -50,7 +50,7 @@
                         <mat-form-field appearance="outline" >
                             <input matInput type="text" placeholder="Current post at Sivo" formControlName="post">
                         </mat-form-field>
-                        <button mat-raised-button  [disabled]="registerForm.invalid" type="submit" color="primary">Register</button>
+                        <button class="button" mat-raised-button  [disabled]="registerForm.invalid" type="submit" color="primary">Register</button>
                     </form>
                 </mat-tab>
             </mat-tab-group>

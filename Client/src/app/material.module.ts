@@ -20,6 +20,13 @@ import { MatSortModule} from '@angular/material/sort';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // or MatMomentDateModule
+import { MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 
@@ -45,7 +52,14 @@ import { MatNativeDateModule } from '@angular/material/core'; // or MatMomentDat
         MatSortModule,
         MatExpansionModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatProgressSpinnerModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        MatSnackBarModule,
+        MatStepperModule,
+        MatBadgeModule,
+        MatSlideToggleModule
     ],
     exports: [
         MatSidenavModule,
@@ -67,7 +81,14 @@ import { MatNativeDateModule } from '@angular/material/core'; // or MatMomentDat
         MatSortModule,
         MatExpansionModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatProgressSpinnerModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+        MatSnackBarModule,
+        MatStepperModule,
+        MatBadgeModule,
+        MatSlideToggleModule
         
     ]
    

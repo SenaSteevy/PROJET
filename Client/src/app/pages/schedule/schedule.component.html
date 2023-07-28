@@ -1,31 +1,49 @@
 <div class="container" fxFlex fxLayout="column" fxLayoutGap="10px">
-  <div fxFlex fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px" class="title">
-   <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-     <mat-icon >date_range</mat-icon> 
-     <h3>Shedules</h3>
-   </div> 
-      <mat-form-field appearance="outline">
-        <mat-label>Date of shcedules</mat-label>
-        <div fxFlex fxLayout="row">
-          <input matInput  [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="loadPlannings()">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly center" fxLayoutGap="5px" class="title">
+    <div fxFlex="30%" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+      <mat-icon >date_range</mat-icon> 
+      <h3>Schedules</h3>
+    </div> 
+        <div>
+          <mat-slide-toggle
+          color="primary"
+          >
+        Auto planning
+      </mat-slide-toggle>
         </div>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+    <div fxFlex="30%" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+     <button class="button" mat-raised-button color="primary" [disabled]="generating" (click)="generateNewPlanning()">
+        <span *ngIf="!generating">Generate a new one</span>
+      </button>
+    </div>
     
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date of schedules</mat-label>
+      <div fxFlex fxLayout="row">
+        <input matInput  [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="filterPlannings()">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      </div>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field> 
   </div>
-  <div class="filter-container">
-  <div class="schedule-list">
-    <ng-container *ngIf="plannings.length > 0 && !loading">
+  
+  <div class="loading-text" fxFlex fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center" *ngIf="generating">
+    <span class="text">Loading new Schedule. This could take about few minutes... </span>
+    <app-lottie-animation-view  [iconWidth]="'8vw'" [iconHeight]="'5vh'" [animationPath]=" 'loading.json'" [loop]="true"></app-lottie-animation-view>
+  </div>
+   
+  <div class="schedule-list" fxFlex fxLayoutAlign="center center" fxFlex fxLayout="column" fxLayoutGap="10px">
+    <ng-container *ngIf="filteredPlannings.length > 0 && !loading" >
       <mat-accordion>
-        <mat-expansion-panel #panel *ngFor="let planning of plannings; let i = index"
+        <mat-expansion-panel #panel *ngFor="let planning of filteredPlannings; let i = index"  
         [@expandCollapse]
         (opened)="expandedIndex = i"
         (closed)="expandedIndex = -1"
         (mouseenter)="startLottieAnimation(i)"
         (mouseleave)="stopLottieAnimation(i)">
           <mat-expansion-panel-header>
-            <mat-panel-title class="text" >{{ planning.createdAt }}</mat-panel-title>
+            <mat-panel-title class="text" >{{ planning.createdAt | localDateTimeFormat}}</mat-panel-title>
             <mat-panel-description > <span class="text"> SUMMARY :</span>
               <app-lottie-animation-view [animationPath]="getIconName(planning.rxRate)" iconWidth="20" iconHeight="20"></app-lottie-animation-view>
               <span class="text" >{{ getRateText(planning.rxRate) }}</span>
@@ -37,14 +55,10 @@
               
             <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="chart-container" fxFlex fxLayout="column" fxLayoutAlign="start center">
-                  <app-doughnut-chart [rate]="planning.rxRate" [startAnimation]="expandedIndex === i"></app-doughnut-chart>
+                  <app-doughnut-chart [rate]="95.4" [startAnimation]="expandedIndex === i"></app-doughnut-chart>
                   <span class="text">Rx 24 Rate</span>
                 </div>
-                
-                <div class="chart-container" fxFlex fxLayout="column" fxLayoutAlign="start center">
-                  <app-doughnut-chart borderwidth="15px" [rate]="planning.dueDateRate" [startAnimation]="expandedIndex === i"></app-doughnut-chart>
-                  <span class="text">Jobs done before dueDate</span>
-                </div>
+
             </div>
 
             <div class="phase-container" fxFlex fxLayout="column" fxLayoutGap="20px" fxlayoutAlign="start center">
@@ -52,7 +66,7 @@
               <h3 style="text-align: center;"> Here is the task list of this planning for each production phase </h3>
               <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
                 <mat-tab *ngFor="let phase of phases" [label]="phase.name">
-                      <app-task-list [phase]="phase" [jobList]="planning.jobList"></app-task-list>
+                      <app-task-list [phase]="phase" [jobList]="planning.jobList" (onChanges)="loadPlannings()"></app-task-list>
                 </mat-tab>
               </mat-tab-group>
             </div>
@@ -61,10 +75,10 @@
       </mat-accordion>
     </ng-container>
 
-    <ng-template *ngIf="loading">
-      <div class="lottie">
+    <span *ngIf="filteredPlannings.length==0 && !loading" class="text"> No Schedule for this Date.</span>
+
+      <div class="lottie" *ngIf="plannings.length==0 && loading">
         <app-lottie-animation-view  [iconWidth]="'30vw'" [iconHeight]="'10vh'" [animationPath]=" 'loading.json'" [loop]="true"></app-lottie-animation-view>
        </div>
-    </ng-template>
   </div>
 </div>

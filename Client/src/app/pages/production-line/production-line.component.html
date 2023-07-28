@@ -1,1 +1,18 @@
-<p>production-line works!</p>
+<div class="container" fxFlex fxLayout="column" fxLayoutGap="10px">
+    <div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+      <mat-icon>factory</mat-icon>
+      <h3>Production Line</h3>
+    </div>
+
+    <div fxFlex fxLayoutAlign="center">
+      <button class="button" mat-raised-button color="primary" (onClick)="newPhase()"><mat-icon>add</mat-icon>New Phase</button>
+    </div>
+
+    <div cdkDropList (cdkDropListDropped)="drop($event)" fxLayoutGap="20px" fxLayout="column" fxLayoutAlign="center center">
+      <div cdkDrag *ngFor="let phase of phaseList; let i = index" [cdkDragData]="phase" [matBadge]="i" matBadgeSize="large" matBadgePosition="before">
+          <app-phase [phase]="phase"></app-phase>
+      </div>
+    </div>
+
+</div>
+

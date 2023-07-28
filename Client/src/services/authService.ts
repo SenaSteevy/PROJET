@@ -4,8 +4,11 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
+  
+sessionExpired : boolean = false;
 
-  constructor() { } 
+  constructor() {
+   } 
 
   public setRoles(roles : []){
      localStorage.setItem( "roles", JSON.stringify(roles))

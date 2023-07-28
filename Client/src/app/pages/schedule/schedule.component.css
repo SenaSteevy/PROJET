@@ -1,7 +1,10 @@
 .container{
     margin : 1em 3em;
 }
-
+.button{
+    margin : 0.5rem 1rem;
+    border-radius: 20px;
+    }
 .schedule-list{
     padding :1em 2em;
     background-color: white;
@@ -37,7 +40,7 @@
 
 .lottie{
     width: 70vw;
-    height: 70vh;
+    height: 10vh;
     display: flex;
     justify-content: center;
     align-items:  center;
@@ -49,18 +52,19 @@
 
 .chart-container {
     display: flex;
+    width: 100%;
+    height: fit-content;
     flex-direction: column;
     align-items: center;
-    overflow: auto;
-    height: 400px; /* Adjust the height as needed */
-
   }
-  
-  @media (max-width: 480px) {
-    .chart-container {
-      width: 30px;
-      height: 30px;
 
-    }
-  }
   
+  .button{
+    width : 150px;
+    height: 60px;
+  }
+
+  .spinner{
+    width: inherit;
+    height: inherit;
+  }

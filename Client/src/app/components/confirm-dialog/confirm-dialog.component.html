@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>Delete User</h2>
+<h2 mat-dialog-title>{{data.title}}</h2>
     <mat-dialog-content>
-      <p>Are you sure you want to delete this user?</p>
+      <p>{{data.content}}</p>
     </mat-dialog-content>
     <mat-dialog-actions align ="end">
-      <button mat-button mat-dialog-close color="primary">No</button>
-      <button mat-button [mat-dialog-close]="'delete'" color="warn">Yes</button>
+     <button class="button" mat-button mat-dialog-close color="primary">No</button>
+     <button class="button" mat-button [mat-dialog-close]="'yes'" color="warn">Yes</button>
     </mat-dialog-actions>

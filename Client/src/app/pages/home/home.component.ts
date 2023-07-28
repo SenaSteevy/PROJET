@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
   ngAfterViewInit() {
     setTimeout(() => {
       this.loading = false;
-    }, 3000); 
+    }, 5000); 
   }
 
 }

@@ -1,3 +1,10 @@
+.container{
+  width : inherit;
+  height: inherit;
+  position: relative; 
+  display: inline-block;
+}
+
 .chart-center {
     position: absolute;
     top: 55%;

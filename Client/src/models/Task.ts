@@ -1,12 +1,13 @@
+import { Client } from "./Client";
 import { Job } from "./Job";
-import { Phase } from "./Phase";
+import { Treatment } from "./Treatment";
 
 export interface Task {
     id: number;
-    job: Job;
-    phase: Phase;
-    type: string;
+    numOrder: number | undefined;
+    client : Client;
+    treatment: Treatment;
     status: string;
-    startTime: string; 
-    realStartTime: string;
+    startTime: string | undefined; 
+    realStartTime: string | undefined;
   }

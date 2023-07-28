@@ -12,9 +12,10 @@ export interface Job {
     dueDate: string; 
     taskList: Task[];
     resource : Resource,
-    startDateTime: string; 
-    leadTime: string; 
+    startDateTime: string ; 
+    leadTime: string ; 
     priority: number;
     status: string;
-    doneAt : string
+    doneAt : string ;
+    createdAt : string
   }
