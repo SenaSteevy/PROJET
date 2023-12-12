@@ -47,6 +47,9 @@ public class RegisterRequest {
 	@Column(name ="poste")
     private String poste;
 	
+	@Column( name="status")
+	private String status;
+	
 	 public RegisterRequest(RegisterRequestRequest registerRequest) {
 	    	this.firstName = registerRequest.getFirstName();
 	    	this.lastName = registerRequest.getLastName();

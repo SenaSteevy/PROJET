@@ -13,8 +13,8 @@
           </button>
         </label>
         
-     <button  class="remove-profile-button" mat-mini-fab color="warn"
-        [disabled]="!user || !!!user.profile">
+     <button  class="remove-profile-button" (click)="deleteProfile()" mat-mini-fab color="warn"
+        [disabled]="!user || !!!user.profile || isUsersPage">
         <mat-icon>delete</mat-icon>
         </button>
       </div>

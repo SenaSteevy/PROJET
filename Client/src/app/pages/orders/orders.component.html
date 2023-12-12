@@ -73,7 +73,7 @@
                 <mat-label>Filter</mat-label>
                 <input  matInput type="text" width="inherit"  placeholder="Ex : client name " (keyup)="applyFilter($event)" #input>
             </mat-form-field>
-           <button class="button" class="button" mat-raised-button color="primary" routerLink="new"> <mat-icon>add</mat-icon>New Order</button>
+           <button class="button"  mat-raised-button color="primary" routerLink="new"> <mat-icon>add</mat-icon>New Order</button>
         </div>
         <ng-container *ngIf="paginatedData.data.length > 0; else loading " >    
            

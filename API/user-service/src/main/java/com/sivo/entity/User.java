@@ -6,12 +6,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sivo.request.UserRequest;
 
 import lombok.AllArgsConstructor;
@@ -35,8 +39,16 @@ public class User {
 
 	@Id
 	@Include
-	@Column(name = "username")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long id ;
+	
+	@Column(name = "email")
 	private String email;
+	
+	
+	@Column( name = "gender")
+	private String gender;
 
 	@Column(name = "first_name")
 	private String firstName;
@@ -46,19 +58,39 @@ public class User {
 
 	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "post")
+	private String post;
+	
+	
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER )
 	@JoinTable(name = "USER_ROLE", joinColumns = { @JoinColumn(name = "USER_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "ROLE_ID") })
 	private Set<Role> roles;
 
 	public User(UserRequest userRequest) {
-
+		
+		this.gender = userRequest.getGender();
 		this.firstName = userRequest.getFirstName();
 		this.lastName = userRequest.getLastName();
 		this.email = userRequest.getEmail();
 		this.password = userRequest.getPassword();
 		this.roles = userRequest.getRoles();
+		this.post = userRequest.getPost();
 	}
+
+	public User(String email, String gender, String firstName, String lastName, String password, String post,
+			Set<Role> roles) {
+		this.email = email;
+		this.gender = gender;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.post = post;
+		this.roles = roles;
+	}
+	
+
 
 }

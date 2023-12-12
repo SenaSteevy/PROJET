@@ -24,6 +24,7 @@ export class CardComponent implements OnInit {
   @Input() title : any
   @Input() image : any
   @Input() description : any
+  @Input() icon : any
 
   onHover : boolean 
   cardState: 'initial' | 'pulse' = 'initial';

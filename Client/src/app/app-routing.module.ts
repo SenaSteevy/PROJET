@@ -22,6 +22,7 @@ import { EditPhaseComponent } from './pages/edit-phase/edit-phase.component';
 import { EditTreatmentComponent } from './pages/edit-treatment/edit-treatment.component';
 import { TreatmentsComponent } from './pages/treatments/treatments.component';
 import { UserRequestsComponent } from './pages/user-requests/user-requests.component';
+import { SimulatorComponent } from './pages/simulator/simulator.component';
 
 
 const routes: Routes = [
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path : "orders", pathMatch : "full", component : OrdersComponent, canActivate : [AuthGuard]},
   { path : "users", pathMatch : "full", component : UsersComponent, canActivate : [AuthGuard]},
   { path : "tasklist", pathMatch : "full", component : TaskListComponent, canActivate : [AuthGuard]},
+  { path : "simulator", pathMatch : "full", component : SimulatorComponent, canActivate : [AuthGuard]},
   { path : "settings", pathMatch : "full", component : SettingsComponent, canActivate : [AuthGuard]},
 
   { path : "", pathMatch: 'full', redirectTo:"/home"},

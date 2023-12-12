@@ -8,6 +8,10 @@
   import { Job } from 'src/models/Job';
   import { Task } from 'src/models/Task';
 import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
   
 
   @Component({
@@ -32,6 +36,7 @@ import { ActivatedRoute } from '@angular/router';
     expandedIndex: number = -1;
     plannings: Planning[] = [];
     filteredPlannings: Planning[] = [];
+    isToggleOn : boolean = false;
 
     private charts: Chart[] = [];
     lottieAnimations: boolean[] = [];
@@ -39,8 +44,14 @@ import { ActivatedRoute } from '@angular/router';
     
     selectedDate : Date = new  Date();
     loading = true;
+    error = false;
     generating = false;
-    constructor(private jobService: JobService, private activatedRoute : ActivatedRoute) { 
+    constructor(
+      private jobService: JobService, 
+      private activatedRoute : ActivatedRoute,
+      private _snackBar: MatSnackBar,
+      private dialog : MatDialog
+      ) { 
 
       if(this.activatedRoute.snapshot.url.join("/").endsWith("new")){
         this.generateNewPlanning()
@@ -51,6 +62,7 @@ import { ActivatedRoute } from '@angular/router';
       ngOnInit() {
       this.loading = true
       Chart.register(...registerables);
+      this.getAutoPlanning();
       this.getAllphases(); 
       this.loadPlannings();
       
@@ -67,8 +79,6 @@ import { ActivatedRoute } from '@angular/router';
     ngAfterViewInit() {
       setTimeout(() => {
 
-      console.log("filteredPlannings :",this.filteredPlannings);
-      console.log("Plannings :",this.plannings);
       this.initializeCharts();
     }, 300);  
     }
@@ -78,17 +88,47 @@ import { ActivatedRoute } from '@angular/router';
       this.loading = true
       this.jobService.getAllPlannings().subscribe({
         next : (plannings: Planning[]) => {
-          this.plannings = plannings
+          this.plannings = plannings.sort( (a, b) => moment(b.createdAt).diff(moment(a.createdAt)) )
+          
           
     },
+    error : (error :any ) => { 
+      this.error = true
+      console.log("error loading plannings : ",error)},
+    
     complete : () => {
          this.filterPlannings()
          this.generating = false;
         } 
   });
 }
-
-
+  getAutoPlanning(){
+    this.jobService.getAutoPlanning().subscribe({
+      next : (response : any)  => { 
+        this.isToggleOn = response.value == "ON"? true : false;
+      },
+      error : (error)  => { console.log("error getting AutoPlanningValue : ",error)}
+    })
+  }
+  
+  HandleToggleChange(event : any){
+    const toggleEvent = event as unknown as MatSlideToggleChange;
+    this.isToggleOn = toggleEvent.checked;
+    console.log("toggle : ",this.isToggleOn)
+  
+    this.jobService.setAutoPlanning(this.isToggleOn? "ON":"OFF").subscribe({
+      next : (response : any)  => { 
+        this._snackBar.open(`Auto Planification is now ${this.isToggleOn?"ON.":"OFF."}`)
+      },
+      error : (error)  => { console.log("error setting AutoPlanningValue : ",error)}
+    })
+  }
+  
+  openSnackBar(message : string) {
+    this._snackBar.open( message , '', {
+      duration: 2000
+    });
+  }
    filterPlannings() {   
     this.loading = true
     this.filteredPlannings = this.plannings.filter(planning =>

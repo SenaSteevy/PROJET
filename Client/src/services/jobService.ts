@@ -15,6 +15,7 @@ import { UserRequest } from 'src/models/UserRequest';
   providedIn: 'root'
 })
 export class JobService {
+ 
 
   phaseList : Phase[] = []
   clientlist : Client[] = []
@@ -48,6 +49,24 @@ export class JobService {
 
   constructor(private http: HttpClient,private authService : AuthService ) {
      this.updateJobService()
+  }
+
+  getAutoPlanning(){
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
+    return this.http.get<any>(`${this.apiUrl}/ordo/getAutoPlanning`, { headers: headers});
+
+  }
+  setAutoPlanning( value : string){
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
+    return this.http.post(`${this.apiUrl}/ordo/setAutoPlanning/${value}`, { headers: headers});
+
+  }
+
+
+  simulateWithExcelFile(data: FormData) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
+    return this.http.post<File>(`${this.apiUrl}/ordo/solveByExcelFile`, data, { headers: headers});
+
   }
 
   getTreatments() {

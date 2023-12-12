@@ -7,17 +7,17 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sivo.request.JobRequest;
-import com.sivo.resources.TaskDescription;
-import com.sivo.response.PhaseResponse;
+import com.sivo.resource.Client;
+import com.sivo.resource.Resource;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -40,12 +40,23 @@ public class Job {
 
 	@Id
 	@Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "num_order")
 	private Integer numOrder;
 
+	@Column(name = "code_order")
+	private String codeOrder;
+	
 	@ManyToOne
-	@JoinColumn(name = "task_description", nullable = false)
-	private TaskDescription taskDescription;
+	@ToString.Exclude
+	@JoinColumn( name = "client_id")
+	private Client client;
+	
+	@Column(name = "description")
+	private String description;
+	
+	@Column(name = "supplement")
+	private String supplement ;
 
 	@Column(name = "type")
 	private String type;
@@ -54,33 +65,56 @@ public class Job {
 	private LocalDateTime dueDate;
 
 	@ToString.Exclude
-	@JsonIgnore
-	@OneToMany(mappedBy = "job", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
 	private List<Task> taskList;
+	
+	@ManyToOne(cascade = CascadeType.DETACH)
+	@JoinColumn(name = "resource_id")
+	private Resource resource;
 
-	// la valeur sera décidée à partir de l'ordre de chaque solution
 	@Column(name = "startDateTime")
 	private LocalDateTime startDateTime;
 
 	@Column(name = "leadTime")
 	private Duration leadTime;
+	
+	@Column(name = "createdAt")
+	private LocalDateTime createdAt;
 
 	@Column(name = "priority")
 	private int priority;
 
 	@Column(name = "status")
 	private String status;
+	
+	
+	@Column(name="doneAt")
+	private LocalDateTime doneAt;
 
 	public Job(JobRequest jobRequest) {
 
 		this.numOrder = jobRequest.getNumOrder();
-		this.taskDescription = jobRequest.getTaskDescription();
+		this.codeOrder = jobRequest.getCodeOrder();
+		this.client = jobRequest.getClient();
+		this.description = jobRequest.getDescription();
+		this.supplement = jobRequest.getSupplement();
 		this.type = jobRequest.getType();
 		this.dueDate = jobRequest.getDueDate();
-		this.startDateTime = null;
+		this.taskList = jobRequest.getTaskList();
+		this.resource = jobRequest.getResource();
+		this.startDateTime = jobRequest.getStartDateTime();
 		this.leadTime = jobRequest.getLeadTime();
 		this.priority = jobRequest.getPriority();
 		this.status = jobRequest.getStatus();
+		this.doneAt = jobRequest.getDoneAt();
+		this.createdAt= jobRequest.getCreatedAt();	}
+
+	public void updateTask(Task task) {
+		
+		this.taskList.remove(task);
+		this.taskList.add(task);
+		
 	}
+	
 
 }

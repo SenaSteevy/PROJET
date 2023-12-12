@@ -12,4 +12,6 @@ public interface JobRepository extends JpaRepository<Job, Integer> {
 	@Query("SELECT DISTINCT t.type FROM Job t")
     List<String> findAllTypes();
 
+	
+
 }

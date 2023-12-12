@@ -15,8 +15,9 @@
 
   @media screen and (max-width: 900px) {
     mat-form-field{
-      width: 60%; 
+      width: 50%; 
     }
+  
   }
 
   @media screen and (max-width: 600px) {
@@ -29,6 +30,10 @@
       background-size: cover;
       background-position: center;
 
+    }
+   
+    mat-form-field{
+      width: 40%; 
     }
   }
 
@@ -43,9 +48,13 @@
       background-position: center;
 
     }
+    .mat-stepper{
+      orientation: vertical;
+    }
   }
 
 .button{
   margin : 0.5rem 1rem;
   border-radius: 20px;
 }
+

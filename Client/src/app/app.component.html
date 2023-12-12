@@ -74,7 +74,6 @@
         <mat-menu #userMenu="matMenu" [overlapTrigger]="false">
        
           <button routerLink="/profile/{{connectedUser.id}}"  mat-menu-item>
-            <img class="profile" *ngIf="!!connectedUser.profile" [src]="connectedUser.profile" [alt]="connectedUser.name" />
             <mat-icon>account_box</mat-icon>
             <span>Profile</span>
           </button>

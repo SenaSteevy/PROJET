@@ -24,6 +24,14 @@ public class Constraints implements ConstraintProvider {
 		};
 	}
 
+	private Constraint ResourceShouldBefull(ConstraintFactory constraintFactory) {
+		return constraintFactory.forEach(Task.class)
+				.groupBy(Task::getStartTime, Task::getPhase, ConstraintCollectors.count())
+				.filter((startTime, phase, count) -> count <= phase.getCapacity())
+				.penalize(HardMediumSoftScore.ONE_MEDIUM, (startTime, phase, count) -> phase.getCapacity() - count)
+				.asConstraint("Resource should be full");
+	}
+	
 	private Constraint minimizeTimeGapBetweenTasks(ConstraintFactory constraintFactory) {
 		return constraintFactory.forEach(Task.class)
 				.filter(task -> task.getPhase().getId() > 0) // considérer uniquement les tâches avec des phases non-nulles
@@ -41,13 +49,7 @@ public class Constraints implements ConstraintProvider {
 		        .asConstraint("minimize time Gap between tasks");
 				}
 
-	private Constraint ResourceShouldBefull(ConstraintFactory constraintFactory) {
-		return constraintFactory.forEach(Task.class)
-				.groupBy(Task::getStartTime, Task::getPhase, ConstraintCollectors.count())
-				.filter((startTime, phase, count) -> count <= phase.getCapacity())
-				.penalize(HardMediumSoftScore.ONE_MEDIUM, (startTime, phase, count) -> phase.getCapacity() - count)
-				.asConstraint("Resource should be full");
-	}
+	
 
 	private Constraint anteriorityTask(ConstraintFactory constraintFactory) {
 		return constraintFactory.forEach(Task.class)

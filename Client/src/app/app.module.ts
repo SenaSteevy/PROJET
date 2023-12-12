@@ -49,7 +49,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TreatmentsComponent } from './pages/treatments/treatments.component';
 import { EditTreatmentComponent } from './pages/edit-treatment/edit-treatment.component';
 import { TreatmentFormComponent } from './components/treatment-form/treatment-form.component';
-import { UserRequestsComponent } from './pages/user-requests/user-requests.component'; 
+import { UserRequestsComponent } from './pages/user-requests/user-requests.component';
+import { SimulatorComponent } from './pages/simulator/simulator.component';
 
 export function playerFactory() {
   return player;
@@ -93,7 +94,8 @@ export function playerFactory() {
     TreatmentsComponent,
     EditTreatmentComponent,
     TreatmentFormComponent,
-    UserRequestsComponent
+    UserRequestsComponent,
+    SimulatorComponent,
     
   ],
   imports: [

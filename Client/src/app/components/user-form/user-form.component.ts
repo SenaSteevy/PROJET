@@ -118,7 +118,6 @@ import { DialogComponent } from '../dialog/dialog.component';
         }
         this.profileImage = file;
         this.isProfileImageChanged = true;
-        console.log("file : ", file)
 
         // Read the selected image and convert it to data URL
         const reader = new FileReader();
@@ -165,6 +164,17 @@ import { DialogComponent } from '../dialog/dialog.component';
                 this.userService.updateUser(this.user.id, this.userForm ).subscribe(
                   
                   (response: any) => {
+
+                     //if image size > 3 MB
+                  if(!!this.profileImage && this.profileImage.size > 3000000){
+                    this.dialog.open(DialogComponent, {
+                      width: '500px',
+                      data: {title : "Image size Issue", message : "Your profile image size is to big. Please select an image with less than 3 MB size."}
+                    });
+                    this.selectedProfileImage= null
+                    return
+                  }
+
                     this.uploadImage(this.userForm.get('email')?.value)
                     this.openSnackBar(" User updated successfully")
                     this.router.navigate(["/users"])
@@ -176,11 +186,24 @@ import { DialogComponent } from '../dialog/dialog.component';
                 this.userService.updateUser(this.user.id, this.userForm).subscribe(
                   (response: any) => { 
                     this.router.navigate(["/users"])
-                    this.openSnackBar("User updated successfully"); },
+                    this.openSnackBar("User updated successfully"); 
+                  },
                   (error: any) => { console.error('Error updating user', error); }
                 );
                 
             }
+            
+            if(!!!this.profileImage && this.isProfileImageChanged){
+              this.userService.deleteImage(this.user.id).subscribe({
+                next : (response)  => {this.openSnackBar("Profile image removed.")},
+                error : (error)  => {console.log("error deleting profile image :",error)}
+              })
+            }
+
+            if( this.user.id === this.authService.getUser().id){
+                  this.userService.connectedUserHasChanged = true   
+                  console.log("connected user changed !")
+             }
             
           }else {
             this.userService.createUser(this.userForm.value).subscribe({
@@ -209,8 +232,9 @@ import { DialogComponent } from '../dialog/dialog.component';
     uploadImage(username : string) {
       if (!this.profileImage) {
         console.error('No file selected.');
-        return;
+        return ;
       }
+
   
       const formData: FormData = new FormData();
       formData.append('imageFile', this.profileImage, this.profileImage.name);
@@ -263,5 +287,11 @@ import { DialogComponent } from '../dialog/dialog.component';
     });
   }
   
+  deleteProfile(){
+    this.selectedProfileImage = null;
+    this.user.profile = null;
+    this.isProfileImageChanged = true;
+    
+  }
  
   }

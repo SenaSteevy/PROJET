@@ -8,12 +8,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sivo.response.PhaseResponse;
+import com.sivo.request.PhaseRequest;
+import com.sivo.resource.Timeslot;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -38,6 +41,8 @@ public class Phase implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private long id;
 	
@@ -51,18 +56,25 @@ public class Phase implements Serializable {
 	@Column( name = "duration")
 	private Duration duration;
 	
-	@ToString.Exclude
-	@JsonIgnore
-	@OneToMany(mappedBy = "phase", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-	private List<Task> taskList;
 	
-	public Phase(PhaseResponse phaseResponse) {
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	@JoinColumn(name = "phase_id")
+	private List<Timeslot> timeslotList;
+	 
+	public Phase(PhaseRequest phaseRequest) {
 
-		this.id = phaseResponse.getId();
-		this.name = phaseResponse.getName();
-		this.capacity = phaseResponse.getCapacity();
-		this.duration = phaseResponse.getDuration();
+		this.name = phaseRequest.getName();
+		this.capacity = phaseRequest.getCapacity();
+		this.duration = phaseRequest.getDuration();
+		this.timeslotList = phaseRequest.getTimeslotList();
 
+	}
+
+	public Phase(String string, int i, Duration ofMinutes, List<Timeslot> timeslotList2) {
+		this.name = string;
+		this.capacity = i;
+		this.duration = ofMinutes;
+		this.timeslotList = timeslotList2;
 	}
 
 

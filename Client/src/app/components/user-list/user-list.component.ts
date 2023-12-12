@@ -141,7 +141,6 @@ export class UserListComponent implements  AfterViewInit {
     this.selectedUser = null
     setTimeout( () => {
       this.selectedUser = user
-      console.log("selectedUser : ",this.selectedUser)
     }, 1000)
   }
 

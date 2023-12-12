@@ -1,9 +1,11 @@
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { FileHandle } from 'src/models/FileHandle';
 import { AuthService } from 'src/services/authService';
 import { UserService } from 'src/services/userService';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +13,7 @@ import { UserService } from 'src/services/userService';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements DoCheck{
+export class AppComponent implements OnInit, DoCheck{
   menus = [
     {
       icon: 'home',
@@ -146,23 +148,65 @@ export class AppComponent implements DoCheck{
   connectedUser : any
   constructor(private authService : AuthService, 
     private router : Router, 
+    private dialog : MatDialog,
     private userService : UserService,
     private sanitizer : DomSanitizer){
     this.connectedUser = this.authService.getUser();
   }
+  ngOnInit(): void {
+
+    this.loadProfileImage()
+   
+  }
   ngDoCheck(): void {
-    const user = this.authService.getUser()
+    const user = this.userService.connectedUser
     if (user != undefined) {
       this.connectedUser = user;
-    } 
+    }
+    if(this.userService.connectedUserHasChanged){
+      setTimeout(() => {
+        this.loadProfileImage()
+      }, 2000);
+    }
 
   }
   
+  loadProfileImage() : void {
+    this.userService.getImage(this.connectedUser.email).subscribe(
+      (res: any) => {
+        if (res && res.picByte) {
+          const file: File = new File([res.picByte], res.name, { type: res.type });
+          const url: string = 'data:image/jpeg;base64,' + res.picByte;
+          const fileHandle: FileHandle = { file :file, 
+            url :this.sanitizer.bypassSecurityTrustUrl(url) };
+          this.connectedUser.profile = fileHandle;
+        } else {
+          this.connectedUser.profile = null;
+        }
+      },
+      (error : any ) => {
+        console.error(error);
+      }
+      );
+      this.userService.connectedUserHasChanged = false;
+  }
 
   Disconnect() : void {
-    this.connectedUser = undefined;
-    this.authService.clear();
-    this.router.navigate(["/login"]);
+    let data = { title: "LOG OUT", content: `Are you sure you want to log out ?` }
+       
+        let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: '300px',
+          data: data
+        });
+    
+        dialogRef.afterClosed().subscribe((result : string) => {
+
+          if(result=="yes"){
+            this.connectedUser = undefined;
+            this.authService.clear();
+            this.router.navigate(["/login"]);
+          }
+        });
   }
 
   isActive(route: string): boolean {

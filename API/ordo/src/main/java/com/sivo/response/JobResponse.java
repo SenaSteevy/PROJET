@@ -2,8 +2,11 @@ package com.sivo.response;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import com.sivo.resources.TaskDescription;
+import com.sivo.domain.Task;
+import com.sivo.resource.Client;
+import com.sivo.resource.Resource;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,18 +26,31 @@ public class JobResponse {
 	
 	private int numOrder;
 	
-	private TaskDescription taskDescription;
+	private String codeOrder ;
+
+	private Client client;
+	
+	private String description;
+	
+	private String supplement;
 	
 	private String type;
-	
+
 	private LocalDateTime dueDate;
 	
-	private LocalDateTime startDate;
+	private List<Task> taskList;
+	
+	private Resource resource;
+
+	private LocalDateTime startDateTime;
 
 	private Duration leadTime;
 
 	private int priority;
 
 	private String status;
+	
+	private LocalDateTime doneAt;
+
 
 }

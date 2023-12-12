@@ -12,8 +12,9 @@ import { UserRequest } from 'src/models/UserRequest';
 })
 
 export class UserService{
-
+ 
   connectedUser : any;
+  connectedUserHasChanged: boolean = false;
     
   PATH_OF_API = "http://localhost:8081/api/user"
  
@@ -23,17 +24,25 @@ export class UserService{
 
   constructor( private httpClient : HttpClient, private authService :AuthService){
     this.connectedUser = authService.getUser()
+    
   }
  
   
 
   uploadImage(imageData: FormData, username: string, headers: HttpHeaders): Observable<HttpResponse<any>> {
-    return this.httpClient.post(`http://localhost:8081/api/user/image/upload?username=${username}`, imageData, {
+
+    return this.httpClient.post(this.PATH_OF_API+`/image/upload?username=${username}`, imageData, {
       headers: headers,
       reportProgress: true,
       observe: 'response' // Change observe option to 'response'
     });
   }
+
+  deleteImage(id: string){
+    this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
+    return this.httpClient.post(this.PATH_OF_API+`/image/delete?id=${id}`,null,{ headers: this.headers  });
+  }
+
   
   
 
@@ -42,7 +51,7 @@ export class UserService{
     return this.httpClient.get<Role[]>(this.PATH_OF_API + '/getAllRoles', { headers: this.headers })
     
   }
-
+  
   createUser(data: any) {
     this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
     return this.httpClient.post(this.PATH_OF_API + '/registerNewUser',data, { headers: this.headers })

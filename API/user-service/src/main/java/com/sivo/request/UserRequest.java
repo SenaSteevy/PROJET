@@ -2,6 +2,7 @@ package com.sivo.request;
 
 import java.util.Set;
 
+import com.sivo.entity.ImageModel;
 import com.sivo.entity.Role;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,11 @@ import lombok.ToString;
 @ToString
 
 public class UserRequest {
+	
+	private Long id;
 
+	private String gender;
+	
 	private String firstName;
 	
 	private String lastName;
@@ -29,5 +34,9 @@ public class UserRequest {
 	private String password;
 	
 	private Set<Role> roles;
+	
+	private String post;
+	
+	private ImageModel profile ;
 
 }

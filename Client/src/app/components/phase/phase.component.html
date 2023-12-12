@@ -2,7 +2,7 @@
   <mat-card-title>{{phase.name}}</mat-card-title>
   <mat-card-subtitle>
    <span> Capacity : {{phase.capacity}}</span> 
-   <span> Duration : {{phase.duration}}</span> 
+   <span> Duration : {{phase.duration | durationFormat}}</span> 
   </mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content>
@@ -12,15 +12,15 @@
   
         <div  fxFlex fxLayoutAlign="space-evenly center" >
 
-          <mat-checkbox [(ngModel)]="timeslot.enabled">Schedule</mat-checkbox>
+          <mat-checkbox [(ngModel)]="timeslot.enabled" disabled>Schedule</mat-checkbox>
           
           <mat-form-field>
             <mat-label>Start Time</mat-label>
-            <input matInput type="time" [value]="timeslot.startTime" [disabled]="!timeslot.enabled" />
+            <input matInput type="time" [value]="timeslot.startTime" readonly />
           </mat-form-field>
           <mat-form-field>
             <mat-label>End Time</mat-label>
-            <input matInput  type="time" [value]="timeslot.endTime" [disabled]="!timeslot.enabled" />
+            <input matInput  type="time" [value]="timeslot.endTime" readonly />
           </mat-form-field>
         </div>
         </mat-step>

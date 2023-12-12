@@ -21,6 +21,7 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
   phaseForm !: FormGroup
   isPhasesPage : boolean = true
   timeslotList: Timeslot[] = [];
+  screenSize : any
 
   timeslots = [
     {
@@ -88,10 +89,17 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
   
        ngOnInit(): void {
         this.initializeForm()
+
+        window.addEventListener('resize', () => {
+           this.screenSize = window.innerWidth;
+         
+        });
+      
       }
     
       initializeForm() {
         this.phaseForm = this.formBuilder.group({
+          id : new FormControl(this.phase?.id),
           name: new FormControl(this.phase?.name || '', Validators.required),
           capacity: new FormControl(this.phase?.capacity || '', Validators.required),
           duration: new FormControl(this.phase ? this.convertDurationToTime(this.phase.duration) : ''),
@@ -140,9 +148,9 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
         dialogRef.afterClosed().subscribe((result : string) => {
   
           if(result=="yes"){
-             this.createTimeslotList();
+            this.createTimeslotList();
             const newPhase  = {
-              id : this.phase?.id || 0,
+              id :  0,
               name : this.phaseForm.get('name')?.value,
               capacity : parseInt(this.phaseForm.get('capacity')?.value),
               duration : this.convertTimeToDuration(this.phaseForm.get('duration')?.value),
@@ -155,6 +163,8 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
                   this.phase = response
                   this.openSnackBar("Phase Updated Successfully.")
                   this.initializeForm()
+                  this.router.navigate(["/production-line"])
+
                 },
                 error : (error) => { console.log("error updating phase ",error)}
               })
@@ -163,7 +173,7 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
             this.jobService.createPhase(newPhase).subscribe({
               next : (response: any) => {  
                       this.openSnackBar(" New Phase Created successfully") 
-                      this.router.navigate(["/phases"])
+                      this.router.navigate(["/production-line"])
               },
               error : (error: any) => { console.error('Error creating user', error); } 
             })
@@ -196,15 +206,25 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
     }
 
     createTimeslotList(): void {
-      this.timeslotList = this.timeslots.map((timeslot: any) => {
-        const newTimeslot: Timeslot = {
-          id: 0,
-          dayOfWeek: timeslot.dayOfWeek,
-          startTime: timeslot.enabled ? timeslot.startTime : '',
-          endTime: timeslot.enabled ? timeslot.endTime : '',
-        };
-        return newTimeslot;
-      });
+      let newTimeslot : Timeslot
+      this.timeslots.forEach((slot) => {
+        slot.id = this.phase.timeslotList.find((timeslot) => timeslot.dayOfWeek == slot.dayOfWeek)?.id || 0
+        slot.startTime = this.phaseForm.get('startTime_'+slot.dayOfWeek)?.value
+        slot.endTime = this.phaseForm.get('endTime_'+slot.dayOfWeek)?.value 
+        slot.enabled = this.phaseForm.get('enabled_'+slot.dayOfWeek)?.value 
+
+        if(slot.enabled){
+          newTimeslot = {
+            id : slot.id,
+            dayOfWeek : slot.dayOfWeek,
+            startTime : slot.startTime,
+            endTime : slot.endTime
+          }
+          this.timeslotList.push(newTimeslot)
+        }
+      })
+
+
     }
   
     openSnackBar(message : string) {
@@ -238,6 +258,16 @@ export class PhaseFormComponent implements OnInit , AfterViewInit{
       return `PT${totalMinutes}M`;
     }
   
+    onCheckboxChange(event : any , dayOfWeek : string) {
+      if(event){
+        this.phaseForm.get('startTime_'+dayOfWeek)?.enable
+        this.phaseForm.get('endTime_'+dayOfWeek)?.enable
+      }else{
+        this.phaseForm.get('startTime_'+dayOfWeek)?.disable
+        this.phaseForm.get('endTime_'+dayOfWeek)?.disable
+
+      }
+    }
   
   }
   

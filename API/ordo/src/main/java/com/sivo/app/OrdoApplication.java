@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableFeignClients("com.sivo.proxy")
 @ComponentScan({"com.sivo.controller", "com.sivo.service"})
-@EntityScan({"com.sivo.domain","com.sivo.resources"})
+@EntityScan({"com.sivo.domain","com.sivo.resource"})
 @EnableJpaRepositories("com.sivo.repository")
 public class OrdoApplication {
 

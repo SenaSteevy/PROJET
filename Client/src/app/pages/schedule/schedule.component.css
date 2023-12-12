@@ -11,6 +11,9 @@
     border-radius: 15px;
 }
 
+.expansion-panel{
+    margin : 10px 10px;
+}
 .charts-container{
     width: 80vw;
     height: 50vh;

@@ -1,6 +1,7 @@
 package com.sivo.service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class JwtService implements UserDetailsService {
 
 		String newGeneratedToken = jwtUtil.generateToken(userdetails);
 		
-		User user = userRepository.findById(username).get();
+		User user = userRepository.findByEmail(username).get();
 		
 		return  ResponseEntity.ok( new JwtResponse(user,newGeneratedToken));
 	}
@@ -54,8 +55,12 @@ public class JwtService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-	    User user = userRepository.findById(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-	    return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
+		Optional<User> userList = userRepository.findByEmail(username);
+		if (userList.isEmpty()) {
+		    throw new UsernameNotFoundException("User not found with username: " + username);
+		}
+
+		User user = userList.get(); 	    return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user));
 	}
 
 

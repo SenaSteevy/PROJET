@@ -30,6 +30,8 @@ public class UserResponse {
 	private String email;
 	private String password;
 	
+	private String post;
+	
 	private Set<Role> roles;
 	
 	
@@ -47,11 +49,13 @@ public class UserResponse {
 
 
 	public UserResponse(User user) {
+		this.id = user.getId();
 		this.firstName = user.getFirstName();
 		this.lastName = user.getLastName();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
 		this.roles = user.getRoles();
+		this.post = user.getPost();
 	}
 
 

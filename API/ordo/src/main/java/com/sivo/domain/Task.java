@@ -1,13 +1,14 @@
 package com.sivo.domain;
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,8 @@ import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -40,10 +43,6 @@ import lombok.ToString;
 @PlanningEntity
 public class Task implements Serializable {
 
-	
-	
-
-
 	private static final long serialVersionUID = 1L;
 
 	@PlanningId
@@ -53,16 +52,14 @@ public class Task implements Serializable {
 	@Column(name = "id")
 	private long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "job")
+	@ManyToOne(fetch = FetchType.EAGER , cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "job_id")
+	@JsonIgnore
 	private Job job;
 	
 	@ManyToOne
-	@JoinColumn(name = "phase")
-	private Phase phase;
-	
-	@Column(name ="type")
-	private String type;
+	@JoinColumn(name = "treatment")
+	private Treatment treatment;
 	
 	@Column(name = "status")
 	private String status;
@@ -71,41 +68,62 @@ public class Task implements Serializable {
 	@PlanningVariable(valueRangeProviderRefs = {"startTimeRange"})
 	private LocalDateTime  startTime ;
 	
+	@Column( name ="realStartTime")
+	private LocalDateTime  realStartTime ;
+	
+	@Column(name = "timeRangeStartTime")
+	private LocalDateTime timeRangeStartTime;
 	
 	 @ValueRangeProvider(id = "startTimeRange")
 	 public  List<LocalDateTime> DateTimeRange() {
 		 
 	        List<LocalDateTime> dateTimeList = new ArrayList<>();
+	        
+	        LocalDateTime currentDateTime = LocalDateTime.now();
+	        
+	        if(this.timeRangeStartTime != null) {
+	        	
+	        	currentDateTime = this.timeRangeStartTime;
+	        }else 
+	        	if(this.getJob().getDueDate().isBefore(currentDateTime)) {
+	        		currentDateTime = this.getJob().getCreatedAt();
+	        	}
 
-//	        LocalDateTime currentDateTime = LocalDateTime.now();
-
-	        LocalDateTime currentDateTime = LocalDateTime.of(2023, 1, 1, 18, 20);
 	        
 	        while (currentDateTime.isBefore(this.getJob().getDueDate())) {
 	            dateTimeList.add(currentDateTime);
-	            currentDateTime = currentDateTime.plus(this.getPhase().getDuration());
+	            currentDateTime = currentDateTime.plus(this.treatment.getPhase().getDuration());
 	        }
-
+	        
+	        if(dateTimeList.isEmpty()) {
+	        
+	        	while (currentDateTime.isBefore(this.job.getCreatedAt().plusDays(2))) {
+		            dateTimeList.add(currentDateTime);
+		            currentDateTime = currentDateTime.plus(this.treatment.getPhase().getDuration());
+		        }
+	        }
 	        return dateTimeList;
 	    }
 	 
 	 public int getPhaseId() {
-		return  (int) this.phase.getId();
+		return  (int) this.treatment.getPhase().getId();
 	 }
 
-	public Task(Job job2, Phase phase2) {
-		
-		this.job = job2;
-		this.phase = phase2;
-		this.status = "UNDONE";
 
-	}
+	 public Phase getPhase() {
+		 return this.treatment.getPhase();
+	 }
 
-	public Task(Job job2, Phase antiReflet, String taskType) {
-		this.job = job2;
-		this.phase = antiReflet;
-		this.type = taskType;
+	public Task(Treatment treatment2) {
+		this.treatment = treatment2;
 		this.status = "UNDONE";
+		this.timeRangeStartTime = LocalDateTime.of(2023, 1, 1, 18, 20);
 	}
+	
+	 
+
+	  
+
+
 	
 }
