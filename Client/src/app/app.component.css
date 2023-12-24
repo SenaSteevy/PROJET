@@ -1,7 +1,7 @@
 
 mat-sidenav-container{
     position: relative;
-    width:100%;
+    width:100vw;
     height: 100vh;
 }
 mat-accordion{
@@ -12,7 +12,7 @@ mat-sidenav{
 }
 .side-nav-content{
     position: flex;
-    width: inherit;
+    width: 100vw;
     height: fit-content;
     overflow: hidden;
 }
@@ -20,7 +20,7 @@ mat-sidenav{
     position:sticky;
     box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.705);
     top:0;
-    width:100%;
+    width:100vw;
     z-index:3;
 }
 .toolBar-button{
@@ -55,7 +55,7 @@ mat-sidenav{
 
 .content{
     background-color: rgba(229, 229, 231, 0.925);
-    width:100%;
+    width:inherit;
 }
 
 .bar{
@@ -73,7 +73,7 @@ mat-sidenav{
 footer {
     position:relative;
     bottom: 0;
-    width: 100%;
+    width: 100vw;
     background:url("../assets/images/SL-030720-28740-05.jpg");
     background-position-y: bottom;
     height: 200px;

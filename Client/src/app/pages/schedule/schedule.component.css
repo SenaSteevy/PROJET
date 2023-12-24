@@ -31,7 +31,9 @@
     font-weight: bold;
 }
 
-
+mat-form-field{
+    width: fit-content;
+}
 .task-container{
     margin: 5px ;
     border-radius: 10px;

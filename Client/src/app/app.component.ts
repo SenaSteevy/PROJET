@@ -25,6 +25,11 @@ export class AppComponent implements OnInit, DoCheck{
       label: 'Plannings',
       items: [
         {
+          routerLink: '/simulator',
+          icon: 'play_arrow',
+          label: 'Planning Simulator'
+        },
+        {
           routerLink: '/schedules',
           icon: 'list_alt',
           label: 'All Plannings'
@@ -172,6 +177,7 @@ export class AppComponent implements OnInit, DoCheck{
   }
   
   loadProfileImage() : void {
+    if( this.connectedUser)
     this.userService.getImage(this.connectedUser.email).subscribe(
       (res: any) => {
         if (res && res.picByte) {
@@ -185,7 +191,7 @@ export class AppComponent implements OnInit, DoCheck{
         }
       },
       (error : any ) => {
-        console.error(error);
+        console.log("error getting image",error);
       }
       );
       this.userService.connectedUserHasChanged = false;

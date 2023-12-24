@@ -321,6 +321,7 @@ export class OrdersComponent implements OnInit, AfterViewInit {
         this.jobService.deleteJob(job.numOrder).subscribe({
           next : (response:any) => { 
             this.openSnackBar("Order Deleted.")
+            this.ngAfterViewInit()
            },
           error : (error) => console.log("error during order deletion :",error)
         })

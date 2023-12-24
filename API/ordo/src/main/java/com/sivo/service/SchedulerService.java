@@ -42,6 +42,7 @@ import com.sivo.domain.Planning;
 import com.sivo.domain.Schedule;
 import com.sivo.domain.Task;
 import com.sivo.domain.Treatment;
+import com.sivo.repository.AutoPlanningRepository;
 import com.sivo.repository.ClientRepository;
 import com.sivo.repository.JobRepository;
 import com.sivo.repository.PhaseRepository;
@@ -49,6 +50,7 @@ import com.sivo.repository.PlanningRepository;
 import com.sivo.repository.ResourceRepository;
 import com.sivo.repository.TaskRepository;
 import com.sivo.repository.TreatmentRepository;
+import com.sivo.request.AutoPlanningRequest;
 import com.sivo.request.ClientRequest;
 import com.sivo.request.JobRequest;
 import com.sivo.resource.AutoPlanning;
@@ -60,8 +62,9 @@ import com.sivo.resource.Timeslot;
 @Transactional
 public class SchedulerService {
 	
-	private AutoPlanning autoPlanning = new AutoPlanning("OFF");
-
+	@Autowired
+	AutoPlanningRepository autoPlanningRepository;
+	
 	@Autowired
 	JobRepository jobRepository;
 
@@ -98,12 +101,19 @@ public class SchedulerService {
 	Phase antiReflet;
 	
 	public ResponseEntity<?> setAutoPlanning(String value) {
-		this.autoPlanning.setValue(value);
-		return ResponseEntity.ok().build();
+		AutoPlanningRequest autoPlanning = new AutoPlanningRequest(value);
+		return this.updateAutoPlanning(autoPlanning);
 	}
 	
 	public ResponseEntity<?> getAutoPlanning() {
-		return ResponseEntity.ok(this.autoPlanning);
+		List<AutoPlanning> autoPlannings = autoPlanningRepository.findAll();
+		
+		if(autoPlannings.isEmpty()) {
+			return ResponseEntity.ok(new AutoPlanning("OFF"));
+		}
+		else {
+			return ResponseEntity.ok(autoPlannings.get(0));
+		}
 	}
 
 	public Schedule solve(Schedule problem) {
@@ -223,6 +233,11 @@ public class SchedulerService {
 
 		Optional<Job> job = jobRepository.findById(id);
 		if (job.isPresent()) {
+			
+			 List<Planning> planningList = planningRepository.findAll();
+			 planningList.stream().map( planning ->  planning.getJobList().remove(job.get()));
+			 
+			 planningRepository.saveAll(planningList);
 			jobRepository.deleteById(id);
 			taskRepository.deleteInBatch(job.get().getTaskList());
 			return ResponseEntity.ok().build();
@@ -542,6 +557,9 @@ public class SchedulerService {
 	    this.taskId = 0;
 	    for (int i=1 ; i <= sheet.getPhysicalNumberOfRows(); i++  ) {
 	    	Row row = sheet.getRow(i);
+	    	if(row.getCell(1).getStringCellValue().equals("")) {
+	    		break;
+	    	}
 		    Job job = new Job();
 
 	        // Set the job code, description, supplement, type, due date, priority, status, and created date.
@@ -729,5 +747,20 @@ public class SchedulerService {
 		
 		DecimalFormat decimalFormat = new DecimalFormat("00");
 		return decimalFormat.format(localDateTime.getDayOfMonth()) + "/"+decimalFormat.format(localDateTime.getMonthValue()) + "/"+localDateTime.getYear()+ " "+decimalFormat.format(localDateTime.getHour())+":"+decimalFormat.format(localDateTime.getMinute())+":"+decimalFormat.format(localDateTime.getSecond());
+	}
+
+	public ResponseEntity<?> updateAutoPlanning(AutoPlanningRequest autoPlanningRequest) {
+		
+		System.out.println(autoPlanningRequest);
+		AutoPlanning autoPlanning = new AutoPlanning(autoPlanningRequest);
+		AutoPlanning updatedAutoPlanning;
+		try {
+			 updatedAutoPlanning = autoPlanningRepository.save(autoPlanning);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		return ResponseEntity.ok(updatedAutoPlanning);
+		
 	}
 }

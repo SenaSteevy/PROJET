@@ -32,21 +32,27 @@
                     <form [formGroup]="registerForm" (ngSubmit)="register()" fxFlex fxLayout="column" fxLayoutAlign=" center ">
                         <div class="profile"></div>
                             <span>Register if you are new here. </span>
-                            <mat-form-field appearance="outline" style="margin-top : 5px;">
-                            <mat-select matInput required placeholder="Gender" formControlName="gender">
-                                <mat-option value="Male">Male</mat-option>
-                                <mat-option value="Female">Female</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" >
-                            <input matInput placeholder="First Name" formControlName="firstName">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" >
-                            <input matInput placeholder="Last Name" formControlName="lastName">
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" >
-                            <input matInput type="email" placeholder="Email" formControlName="email">
-                        </mat-form-field>
+                            
+                            <div fxFlex fxLayout="row wrap" fxLayoutGap="20px" style="margin-top : 5px;" >
+                                <mat-form-field appearance="outline" >
+                                    <input matInput placeholder="First Name" formControlName="firstName">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" >
+                                    <input matInput placeholder="Last Name" formControlName="lastName">
+                                </mat-form-field>
+                            </div>
+
+                            <div fxFlex fxLayout="row wrap" fxLayoutGap="20px" style="margin-top : 5px;" >        
+                                <mat-form-field appearance="outline" >
+                                    <input matInput type="email" placeholder="Email" formControlName="email">
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" >
+                                    <mat-select matInput required placeholder="Gender" formControlName="gender">
+                                        <mat-option value="Male">Male</mat-option>
+                                        <mat-option value="Female">Female</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
                         <mat-form-field appearance="outline" >
                             <input matInput type="text" placeholder="Current post at Sivo" formControlName="post">
                         </mat-form-field>

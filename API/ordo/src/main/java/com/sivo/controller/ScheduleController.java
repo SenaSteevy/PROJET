@@ -3,8 +3,6 @@ package com.sivo.controller;
 import java.io.IOException;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sivo.domain.Job;
+import com.sivo.request.AutoPlanningRequest;
 import com.sivo.request.JobRequest;
 import com.sivo.service.SchedulerService;
 
@@ -32,7 +31,11 @@ public class ScheduleController {
 	SchedulerService schedulerService;
 	
 	
-
+	@PostMapping("/updateAutoPlanning")
+	public ResponseEntity<?> updateAutoPlanning(@RequestBody AutoPlanningRequest  autoPlanningRequest) {
+		return schedulerService.updateAutoPlanning(autoPlanningRequest);
+	}
+	
 	@PostMapping("/setAutoPlanning/{value}")
 	public ResponseEntity<?> setAutoPlanning(@PathVariable String  value) {
 		return schedulerService.setAutoPlanning(value);

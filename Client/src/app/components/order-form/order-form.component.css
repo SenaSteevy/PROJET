@@ -8,7 +8,7 @@
   }
 
   mat-form-field{
-    width: 200px;
+    width: 210px;
     margin: 10px;
   }
   .form-content{
@@ -24,3 +24,4 @@
     mat-option span {
       flex-grow: 1;
     }
+

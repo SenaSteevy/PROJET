@@ -100,8 +100,6 @@ nullTreatment : Treatment = {
       })
 
       if(this.isOrdersPage){
-        this.generalForm.disable()
-        this.detailsForm.disable()
         this.phaseForm.disable()
       }
 

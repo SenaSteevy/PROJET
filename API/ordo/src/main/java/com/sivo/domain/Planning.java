@@ -43,7 +43,7 @@ public class Planning {
 	@Column(name = "id")
 	private long id;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL )
 	@JoinTable(name = "JOBS_PLANNING", joinColumns = { @JoinColumn(name = "JOB_ID") }, inverseJoinColumns = {
 			@JoinColumn(name = "PLANNING_ID") })
 	private List<Job> jobList;

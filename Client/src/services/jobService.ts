@@ -10,12 +10,13 @@ import { Client } from 'src/models/Client';
 import { Resource } from 'src/models/Resource';
 import { Treatment } from 'src/models/Treatment';
 import { UserRequest } from 'src/models/UserRequest';
+import { AutoPlanning } from 'src/models/AutoPlanning';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobService {
- 
+  
 
   phaseList : Phase[] = []
   clientlist : Client[] = []
@@ -51,6 +52,10 @@ export class JobService {
      this.updateJobService()
   }
 
+  updateAutoPlanning(autoPlanning: AutoPlanning) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
+    return this.http.post(`${this.apiUrl}/ordo/updateAutoPlanning`,autoPlanning, { headers: headers});  }
+ 
   getAutoPlanning(){
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
     return this.http.get<any>(`${this.apiUrl}/ordo/getAutoPlanning`, { headers: headers});

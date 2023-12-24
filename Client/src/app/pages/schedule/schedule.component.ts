@@ -11,7 +11,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from 'src/app/components/dialog/dialog.component';
   
 
   @Component({
@@ -36,13 +35,13 @@ import { DialogComponent } from 'src/app/components/dialog/dialog.component';
     expandedIndex: number = -1;
     plannings: Planning[] = [];
     filteredPlannings: Planning[] = [];
-    isToggleOn : boolean = false;
+    isToggleOn : any;
 
     private charts: Chart[] = [];
     lottieAnimations: boolean[] = [];
     phases: Phase[] = [];
     
-    selectedDate : Date = new  Date();
+    selectedDate!: Date ;
     loading = true;
     error = false;
     generating = false;
@@ -86,6 +85,7 @@ import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 
     loadPlannings() {
       this.loading = true
+      this.filteredPlannings = [];
       this.jobService.getAllPlannings().subscribe({
         next : (plannings: Planning[]) => {
           this.plannings = plannings.sort( (a, b) => moment(b.createdAt).diff(moment(a.createdAt)) )
@@ -118,7 +118,7 @@ import { DialogComponent } from 'src/app/components/dialog/dialog.component';
   
     this.jobService.setAutoPlanning(this.isToggleOn? "ON":"OFF").subscribe({
       next : (response : any)  => { 
-        this._snackBar.open(`Auto Planification is now ${this.isToggleOn?"ON.":"OFF."}`)
+        this._snackBar.open(`Auto Planification is now ${this.isToggleOn?"ON.":"OFF."}`,'X',{ duration : 3000})
       },
       error : (error)  => { console.log("error setting AutoPlanningValue : ",error)}
     })
@@ -136,7 +136,6 @@ import { DialogComponent } from 'src/app/components/dialog/dialog.component';
     );
 
     setTimeout(() => {
-      console.log("filteredPlannings :",this.filteredPlannings);
       this.initializeCharts();
     }, 500);  
     this.loading = false  
@@ -192,7 +191,7 @@ import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 
         this.charts.push(chart);
 
-        const planning = this.filteredPlannings[index];
+        const planning = this.plannings[index];
         const data = planning.jobList.map(job => ({
           x: job.startDateTime? new Date(job.startDateTime).getTime() :  new Date().getTime(),
           y: job.numOrder,

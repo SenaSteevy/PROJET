@@ -8,26 +8,31 @@
             <ng-container *ngIf="isUpdate">
                 <mat-form-field appearance="outline">
                   <mat-label>N° Order</mat-label>
-                  <input   type="number"  matInput placeholder="N° Order" formControlName="numOrder" required >
+                  <input   type="number"  matInput placeholder="N° Order" formControlName="numOrder" required [readonly]="isOrdersPage" >
                 </mat-form-field>
               </ng-container>
             
               <mat-form-field appearance="outline">
                   <mat-label>Code Order</mat-label>
-                  <input  type="text" matInput placeholder="Order Code"  formControlName="codeOrder" required  >
+                  <input  type="text" matInput placeholder="Order Code"  formControlName="codeOrder" required [readonly]="isOrdersPage"  >
               </mat-form-field>
               
               <mat-form-field appearance="outline">
                   <mat-label>Client</mat-label>
-                  <mat-select formControlName="client"  >
+                  <input type="text" *ngIf="isOrdersPage" matInput   [value]="generalForm.get('client')?.value?.name" [readonly]="isOrdersPage">
+                  <mat-select formControlName="client" *ngIf="!isOrdersPage" >
                     <mat-option (click)="newClient()"><mat-icon>add</mat-icon>New Client</mat-option>
-                      <mat-option *ngFor="let client of clientList" [value]="client">{{client.name}}</mat-option>
+                    <mat-option *ngFor="let client of clientList" [value]="client" >{{client.name}}</mat-option>
                   </mat-select>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
                 <mat-label>Resource</mat-label>
-                <mat-select formControlName="resource"  >
+                <input type="text" *ngIf="isOrdersPage" matInput   
+                [value]="generalForm.get('resource')?.value?.name +' '+generalForm.get('resource')?.value?.type" 
+                [readonly]="isOrdersPage">
+
+                <mat-select formControlName="resource" *ngIf="!isOrdersPage"  >
                     <mat-option (click)="newResource()"><mat-icon>add</mat-icon>New Resource</mat-option>
                     <mat-option *ngFor="let resource of resourceList" 
                     [value]="resource" 
@@ -38,7 +43,9 @@
             
               <mat-form-field appearance="outline">
                   <mat-label>Order type</mat-label>
-                  <mat-select formControlName="type"  >
+                  <input type="text" *ngIf="isOrdersPage" matInput   
+                  [value]="'O'+generalForm.get('type')?.value" [readonly]="isOrdersPage">
+                  <mat-select formControlName="type" *ngIf="!isOrdersPage" >
                       <mat-option value="F"> OF</mat-option>
                       <mat-option value="T"> OT</mat-option>
                   </mat-select>
@@ -81,7 +88,7 @@
             <mat-form-field appearance="outline" height="30px">
               <mat-label>Due Date</mat-label>
               <div fxFlex fxLayout="row">
-                <input matInput  [matDatepicker]="picker" formControlName="dueDate"  >
+                <input matInput  [matDatepicker]="picker" formControlName="dueDate"  [readonly]="isOrdersPage" >
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               </div>
               <mat-datepicker #picker></mat-datepicker>
@@ -89,7 +96,10 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Priority</mat-label>
-              <mat-select formControlName="priority">
+              <input type="text" *ngIf="isOrdersPage" matInput  
+              [value]="detailsForm.get('priority')?.value" [readonly]="isOrdersPage">
+
+              <mat-select formControlName="priority" *ngIf="!isOrdersPage">
                 <mat-option value="1">
                   <div fxLayout="row" fxLayoutAlign="space-between">
                     <div>Low</div>
@@ -131,19 +141,18 @@
                   </div>
                 </mat-option>
               </mat-select>
-            </mat-form-field>            
+            </mat-form-field>    
+            
+            <mat-form-field appearance="outline" *ngIf="job?.startDateTime">
+              <mat-label>Should start at</mat-label>
+              <input type="text"matInput [value]="job.startDateTime | localDateTimeFormat" readonly>
+            </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="job?.leadTime">
+              <mat-label>Duration Estimation</mat-label>
+              <input type="text"matInput [value]="job.leadTime | durationFormat" readonly>
+            </mat-form-field>
           </form>
 
-          <table *ngIf="job" border=0 style="margin: 10px;">
-            <tr *ngIf="job.startDateTime">
-              <td>Should Start At : </td>
-              <td>{{job.startDateTime | localDateTimeFormat}}</td>
-            </tr>
-            <tr>
-              <td>Estimated Duration : </td>
-              <td> {{job.leadTime | durationFormat}}</td>
-            </tr>
-          </table>
 
           <div>
            <button class="button" mat-button matStepperPrevious>Back</button>
