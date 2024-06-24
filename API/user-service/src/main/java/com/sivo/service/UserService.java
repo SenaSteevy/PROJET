@@ -1,22 +1,25 @@
 package com.sivo.service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sivo.entity.ImageModel;
+import com.sivo.entity.Permission;
 import com.sivo.entity.RegisterRequest;
 import com.sivo.entity.Role;
 import com.sivo.entity.User;
 import com.sivo.repository.ImageRepository;
+import com.sivo.repository.PermissionRepository;
 import com.sivo.repository.RegisterRequestRepository;
 import com.sivo.repository.RoleRepository;
 import com.sivo.repository.UserRepository;
@@ -36,20 +39,20 @@ public class UserService {
 	@Autowired
 	ImageRepository imageRepository;
 	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	@Autowired 
+	private PermissionRepository permissionReposotory; 
+	
+	
 
 	@Autowired
 	private RegisterRequestRepository registerRequestRepository;
 	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	
 	public UserResponse createUser(UserRequest userRequest) {
 		
-		//aucun nouvel user ne doit etre admin 
-		Role role = roleRepository.findByRoleName("User").get();
-		Set<Role> roles = new HashSet<>();
-		roles.add(role);
-		userRequest.setRoles(roles);
 		Optional<User> userList = userRepository.findByEmail(userRequest.getEmail());
 		
 		if(!userList.isEmpty())
@@ -68,20 +71,28 @@ public class UserService {
 	    userRepository.deleteAll();
 	    roleRepository.deleteAll();
 
-	    Role admin = new Role("Admin", "All access granted");
-	    Role user = new Role("User", "Have access to some features");
+	    List<Permission> permissionList  = permissionReposotory.findAll();
+	    
+	    //Admin Permissions
+	    Role admin = new Role("Admin", "All access granted",permissionList);
+	    
+	    //User Permissions
+	   permissionList =  permissionList.stream()
+	    .filter(permission -> !permission.getDescription().equalsIgnoreCase("MANAGE USERS"))
+	    .filter(permission -> !permission.getDescription().equalsIgnoreCase("MANAGE ROLES"))
+	    .collect(Collectors.toList());
+	    
+	    Role user = new Role("User", "Have access to some features", permissionList);
 
 	    admin = roleRepository.save(admin);
 	    user = roleRepository.save(user);
 
-	    Set<Role> adminRoles = new HashSet<>();
-	    adminRoles.add(admin);
-	    User user1 = new User("anesyveets@gmail.com", "Male", "admin", "admin", passwordEncoder.encode("admin123"), "Admin", adminRoles);
+	   
+	    User user1 = new User("anesyveets@gmail.com", "Male", "admin", "admin", passwordEncoder.encode("admin123"), "Admin", admin);
 	    user1 = userRepository.save(user1);
 
-	    Set<Role> userRoles = new HashSet<>();
-	    userRoles.add(user);
-	    User user2 = new User("user1@gmail.com", "Male", "sena", "steevy", passwordEncoder.encode("user123"), "user", userRoles);
+	   
+	    User user2 = new User("user1@gmail.com", "Male", "sena", "steevy", passwordEncoder.encode("user123"), "user", user);
 	    user2 = userRepository.save(user2);
 	}
 
@@ -139,6 +150,14 @@ public class UserService {
 		updatedUser.setId(id);
 		updatedUser =  userRepository.save(updatedUser);
 		return ResponseEntity.ok(updatedUser);
+	}
+
+	public ResponseEntity<?> findByEmail(String username) {
+		Optional<User> user = userRepository.findByEmail(username);
+		if(user.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(user.get());
 	}
 }
 	

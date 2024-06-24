@@ -33,9 +33,6 @@ import lombok.ToString;
 public class Treatment {
 	
 	
-
-	private static final long serialVersionUID = 1L;
-
 	@PlanningId
 	@Id
 	@Include

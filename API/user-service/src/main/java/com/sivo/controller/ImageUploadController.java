@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,7 @@ import com.sivo.repository.UserRepository;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "api/user/image")
+@RequestMapping(path = "/images")
 public class ImageUploadController {
 
 	@Autowired
@@ -33,7 +32,6 @@ public class ImageUploadController {
 	@Autowired
 	UserRepository userRepository;
 
-	@PreAuthorize("hasAnyRole('Admin', 'User')")
 	@PostMapping(value = {"/upload"}, consumes= {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<?> uploadImage(@RequestParam("imageFile") MultipartFile file, @RequestParam("username") String username) throws IOException {
 	  // Retrieve the user entity
@@ -54,7 +52,6 @@ public class ImageUploadController {
 	}
 
 	@GetMapping(path = { "/getImage" })	
-	@PreAuthorize("hasAnyRole('Admin', 'User')")
 	public ImageModel getImage(@RequestParam("username") String username) throws IOException {
 		
 		Optional<User> user  = userRepository.findByEmail(username);
@@ -68,7 +65,6 @@ public class ImageUploadController {
 	}
 	
 	@PostMapping("/delete")
-	@PreAuthorize("hasAnyRole('Admin', 'User')")
 	@Transactional
 	public ResponseEntity<?> deleteImage(@RequestParam("id") Long id){
 		

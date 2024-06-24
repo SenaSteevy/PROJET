@@ -6,7 +6,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,46 +23,41 @@ import com.sivo.response.UserResponse;
 import com.sivo.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
-@CrossOrigin
+@RequestMapping("/users")
+@CrossOrigin()
 public class UserController {
 	
 	@Autowired
 	UserService userService;
 	
 	@PostMapping(value = {"/registerNewUser"})
-	@PreAuthorize("hasRole('Admin')")
 	public UserResponse createUser (@RequestBody UserRequest userRequest){
 			return userService.createUser(userRequest);
 	
 	}
-	
-	
 	
 	@PostConstruct
 	public void initializeRolesAndUsers() {
 		userService.initUsersAndRoles();
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
 	@PostMapping("/newRegisterRequest")
 	public ResponseEntity<?> addRegisterRequest(@RequestBody RegisterRequestRequest registerRequest){
 		return userService.addRegisterRequest(registerRequest);
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
 	@PostMapping(value = {"/updateUserById/{id}"})
 	public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody UserRequest userRequest){
 			return userService.updateUser(id, userRequest);		
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
 	@GetMapping("getById/{id}")
 	public ResponseEntity<?> findUserById (@PathVariable("id") Long id) {
 		return userService.findById(id);
 	}
 	
-	@PreAuthorize("hasRole('Admin')")
+
+	
 	@DeleteMapping("/deleteUserById/{id}")
 	public ResponseEntity<?> deleteUserById(@PathVariable("id") Long id){
 		return userService.deleteUserById(id);
@@ -71,7 +65,6 @@ public class UserController {
 
 	
 	@GetMapping("getAll")
-	@PreAuthorize("hasRole('Admin')")
 	@ResponseBody
 	public List<User> getAll () {
 		return userService.getAll();

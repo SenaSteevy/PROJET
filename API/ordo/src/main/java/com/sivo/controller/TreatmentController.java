@@ -17,7 +17,7 @@ import com.sivo.request.TreatmentRequest;
 import com.sivo.service.TreatmentService;
 
 @RestController
-@RequestMapping("/api/treatments")
+@RequestMapping("/treatments")
 @CrossOrigin
 public class TreatmentController {
 
@@ -26,31 +26,31 @@ public class TreatmentController {
 	@Autowired
 	TreatmentService treatmentService;
 
-	@GetMapping("/getAllTreatments")
+	@GetMapping("/getAll")
 	public ResponseEntity<List<Treatment>> getAllTreatments() {
 		
 		return treatmentService.getAllTreatments();
 	}
 	
-	@GetMapping("/getTreatmentById/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Treatment> getTreatmentById(@PathVariable Long id) {
 		
 		return treatmentService.getTreatmentById(id);
 	}
 	
-	@PostMapping("/saveTreatment")
+	@PostMapping("/save")
 	public  ResponseEntity<Treatment> saveTreatment(@RequestBody TreatmentRequest treatmentRequest ) {
 		
 		return treatmentService.saveTreatment(treatmentRequest);
 	}
 	
-	@PostMapping("/deleteTreatmentById/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<Treatment> deleteTreatmentById(@PathVariable Long id){
 		
 		return treatmentService.deleteTreatmentById(id);
 	}
 	
-	@PostMapping("/updateTreatmentById/{id}")
+	@PostMapping("/updateById/{id}")
 	public ResponseEntity<Treatment> updateTreatmentById(@PathVariable Long id, @RequestBody TreatmentRequest treatmentRequest){
 		
 		return treatmentService.updateTreatmentById(id, treatmentRequest);

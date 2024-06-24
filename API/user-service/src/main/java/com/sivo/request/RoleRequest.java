@@ -1,5 +1,9 @@
 package com.sivo.request;
 
+import java.util.List;
+
+import com.sivo.entity.Permission;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -19,5 +23,7 @@ public class RoleRequest {
 	private String roleName;
 	
 	private String RoleDescription;
+	
+	private List<Permission> permissionList;
 
 }

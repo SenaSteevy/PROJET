@@ -45,7 +45,7 @@ export class RolesComponent implements OnInit {
   }
 
   stopAnimation(id : number) {
-    this.cardState = 'initial';
+    this.cardState[id] = 'initial';
     this.onHover[id] = false
 
 }

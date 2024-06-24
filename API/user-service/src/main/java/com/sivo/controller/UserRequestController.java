@@ -19,31 +19,31 @@ import com.sivo.service.RegisterRequestService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/user")
+@RequestMapping("/userRequests")
 
 public class UserRequestController {
 	
 	@Autowired
 	RegisterRequestService userRequestService;
 	
-	@PostMapping("createUserRequest")
+	@PostMapping("new")
 	public ResponseEntity<?> createUserRequest(@RequestBody RegisterRequestRequest userRequestRequest) {
 		
 		return userRequestService.createUserRequest(userRequestRequest);
 		
 	}
 	
-	@GetMapping("/getAllUserRequests")
+	@GetMapping("/getAll")
 	public ResponseEntity<List<RegisterRequest>> getAllUserRequests() {
 		return userRequestService.getAll();
 	}
 
-	@PostMapping("/deleteUserRequest/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<?> deleteUserRequest(@PathVariable("id") Long id){
 		return userRequestService.deleteById(id);
 	}
 	
-	@PostMapping("/updateUserRequest/{id}")
+	@PostMapping("/updateById/{id}")
 	public ResponseEntity<?> updateUserRequest(@PathVariable("id") Long id, @RequestBody RegisterRequestRequest userRequestRequest){
 		return userRequestService.updateById(id, userRequestRequest);
 	}

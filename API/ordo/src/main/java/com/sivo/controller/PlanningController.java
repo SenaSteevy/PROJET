@@ -18,7 +18,7 @@ import com.sivo.resource.Rate;
 import com.sivo.service.PlanningService;
 
 @RestController
-@RequestMapping("/api/ordo")
+@RequestMapping("/plannings")
 @CrossOrigin
 public class PlanningController {
 
@@ -28,25 +28,25 @@ public class PlanningController {
 	PlanningService planningService;
 
 
-	@GetMapping("/getAllPlannings")
+	@GetMapping("/getAll")
 	public ResponseEntity<List<Planning>> getAllPlannings() {
 		
 		return planningService.getAllPlannings();
 	}
 	
-	@GetMapping("/getPlanningById/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Planning> getPlanningById(@PathVariable Long id) {
 		
 		return planningService.getPlanningById(id);
 	}
 	
-	@PostMapping("/savePlanning")
+	@PostMapping("/save")
 	public  ResponseEntity<Planning> savePlanning(@RequestBody PlanningRequest planningRequest ) {
 		
 		return planningService.savePlanning(planningRequest);
 	}
 	
-	@PostMapping("/deletePlanningById/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<Planning> deletePlanningById(@PathVariable Long id){
 		
 		return planningService.deletePlanningById(id);

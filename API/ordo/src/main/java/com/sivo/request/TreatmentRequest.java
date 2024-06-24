@@ -1,7 +1,6 @@
 package com.sivo.request;
 
 import com.sivo.domain.Phase;
-import com.sivo.domain.Treatment;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

@@ -17,38 +17,38 @@ import com.sivo.resource.Resource;
 import com.sivo.service.ResourceService;
 
 @RestController
-@RequestMapping("/api/resources")
+@RequestMapping("/resources")
 @CrossOrigin
 public class ResourceController {
 
 	@Autowired
 	ResourceService resourceService;
 
-	@GetMapping("/getAllResources")
+	@GetMapping("/getAll")
 	public ResponseEntity<List<Resource>> getAllResources() {
 		
 		return resourceService.getAllResources();
 	}
 	
-	@GetMapping("/getResourceById/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Resource> getResourceById(@PathVariable Long id) {
 		
 		return resourceService.getResourceById(id);
 	}
 	
-	@PostMapping("/saveResource")
+	@PostMapping("/save")
 	public  ResponseEntity<Resource> saveResource(@RequestBody ResourceRequest resourceRequest ) {
 		
 		return resourceService.saveResource(resourceRequest);
 	}
 	
-	@PostMapping("/deleteResourceById/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<Resource> deleteResourceById(@PathVariable Long id){
 		
 		return resourceService.deleteResourceById(id);
 	}
 	
-	@PostMapping("/updateResourceById/{id}")
+	@PostMapping("/updateById/{id}")
 	public ResponseEntity<Resource> updateResourceById(@PathVariable Long id,@RequestBody ResourceRequest resourceRequest ){
 		
 		return resourceService.updateResourceById(id,resourceRequest);

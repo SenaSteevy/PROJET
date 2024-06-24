@@ -19,35 +19,33 @@ import com.sivo.service.PhaseService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/phases")
+@RequestMapping("/phases")
 public class PhaseController {
 	
 	@Autowired
 	PhaseService phaseService;
 	
-	@PostMapping("/savePhase")
+	@PostMapping("/save")
 	public ResponseEntity<Phase> createPhase(@RequestBody PhaseRequest phaseRequest) {
 		return phaseService.createPhase(phaseRequest);
 	}
 	
-	@PostMapping("/deletePhaseById/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<Phase> deletePhaseById(@PathVariable("id") long id) {
 		return phaseService.deletePhaseById(id);
 	}
 	
-	@PostMapping("/updatePhaseById/{id}")
+	@PostMapping("/updatById/{id}")
 	public ResponseEntity<Phase> updatePhase(@PathVariable("id") long id, @RequestBody Phase phase) {
 		return phaseService.updatePhaseById( id, phase);
 	}
 	
-	@GetMapping("/getPhaseById/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Phase> getPhaseById(@PathVariable("id") long id) {
 		return phaseService.getPhaseById(id);
 	}
 	
-	
-	
-	@GetMapping("/getAllPhases")
+	@GetMapping("/getAll")
 	public ResponseEntity<List<Phase>> getAllPhase() {
 		return phaseService.getAllPhases();
 	}

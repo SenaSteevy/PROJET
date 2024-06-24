@@ -1,7 +1,5 @@
 package com.sivo.response;
 
-import java.util.Set;
-
 import com.sivo.entity.Role;
 import com.sivo.entity.User;
 
@@ -32,7 +30,7 @@ public class UserResponse {
 	
 	private String post;
 	
-	private Set<Role> roles;
+	private Role role;
 	
 	
 
@@ -54,7 +52,7 @@ public class UserResponse {
 		this.lastName = user.getLastName();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
-		this.roles = user.getRoles();
+		this.role = user.getRole();
 		this.post = user.getPost();
 	}
 

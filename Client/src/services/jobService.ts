@@ -70,7 +70,7 @@ export class JobService {
 
   simulateWithExcelFile(data: FormData) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
-    return this.http.post<File>(`${this.apiUrl}/ordo/solveByExcelFile`, data, { headers: headers});
+    return this.http.post(`${this.apiUrl}/ordo/solveByExcelFile`, data, { headers: headers});
 
   }
 

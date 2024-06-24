@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.sivo.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import reactor.core.publisher.Mono;
 
 @Component
 public class JwtUtil {
@@ -33,10 +35,11 @@ public class JwtUtil {
 		return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
 	}
 	
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		String username = getUserNameFromtoken(token);
-		return (username.equals(userDetails.getUsername()) &&  !isTokenExpired(token));
+	public Mono<Boolean> validateToken(String token, User user) {
+	    String username = getUserNameFromtoken(token);
+	    return Mono.just(username.equals(user.getEmail()) && !isTokenExpired(token));
 	}
+
 	
 	private Boolean isTokenExpired(String token) {
 		final Date expirationDate = getExpirationDateFromToken(token);
@@ -48,13 +51,13 @@ public class JwtUtil {
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
 	
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(User user) {
 		
 		Map<String, Object> claims = new HashMap<>();
 		
 		return Jwts.builder()
 				.setClaims(claims)
-				.setSubject(userDetails.getUsername())
+				.setSubject(user.getEmail())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis()+ TOKEN_VALIDITY *1000))
 				.signWith(SignatureAlgorithm.HS512,SECRET_KEY)

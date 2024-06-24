@@ -17,7 +17,7 @@ import com.sivo.resource.Client;
 import com.sivo.service.ClientService;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/clients")
 @CrossOrigin
 public class ClientController {
 
@@ -26,31 +26,31 @@ public class ClientController {
 	@Autowired
 	ClientService clientService;
 
-	@GetMapping("/getAllClients")
+	@GetMapping("/getAll")
 	public ResponseEntity<List<Client>> getAllClients() {
 		
 		return clientService.getAllClients();
 	}
 	
-	@GetMapping("/getClientById/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Client> getClientById(@PathVariable Long id) {
 		
 		return clientService.getClientById(id);
 	}
 	
-	@PostMapping("/saveClient")
+	@PostMapping("/new")
 	public  ResponseEntity<Client> saveClient(@RequestBody ClientRequest clientRequest ) {
 		
 		return clientService.saveClient(clientRequest);
 	}
 	
-	@PostMapping("/deleteClientById/{id}")
+	@PostMapping("/delete/{id}")
 	public ResponseEntity<Client> deleteClientById(@PathVariable Long id){
 		
 		return clientService.deleteClientById(id);
 	}
 	
-	@PostMapping("/updateClientById/{id}")
+	@PostMapping("/updateById/{id}")
 	public ResponseEntity<Client> updateClientById(@PathVariable Long id, @RequestBody ClientRequest clientRequest){
 		
 		return clientService.updateClientById(id, clientRequest);

@@ -1,7 +1,5 @@
 package com.sivo.request;
 
-import java.util.Set;
-
 import com.sivo.entity.ImageModel;
 import com.sivo.entity.Role;
 
@@ -33,7 +31,7 @@ public class UserRequest {
 	
 	private String password;
 	
-	private Set<Role> roles;
+	private Role role;
 	
 	private String post;
 	
