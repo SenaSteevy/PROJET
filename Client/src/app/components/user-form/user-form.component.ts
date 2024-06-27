@@ -56,20 +56,19 @@ import { DialogComponent } from '../dialog/dialog.component';
       this.initializeForm();   
     }
   
-    getAllRoles() {
-      this.userService.getAllRoles().subscribe(
-        (response: Role[]) => {
-          this.roleList = response;
-        },
-        (error: any) => {
-          console.log("error loading roles: ", error);
-        }
-      );
-    }
+      getAllRoles() {
+        this.userService.getAllRoles().subscribe(
+          (response: any) => {
+            this.roleList = response;
+          },
+          (error: any) => {
+            console.log("error loading roles: ", error);
+          }
+        );
+      }
 
     initializeForm() {
       
-      const selectedRoles = this.user?.roles || []; // If user.roles is undefined, initialize with an empty array
 
       this.userForm = this.formBuilder.group({
         gender: new FormControl(this.user?.gender, Validators.required),
@@ -79,7 +78,7 @@ import { DialogComponent } from '../dialog/dialog.component';
         password : new FormControl(this.user?.password, [Validators.required, Validators.minLength(6)]),
         confirmPassword: new FormControl(this.user?.password, Validators.required),
         post: new FormControl( this.user?.post, Validators.required),
-        roles: new FormControl(selectedRoles),
+        role: new FormControl(this.user?.role),
         profile : new FormControl(this.user?.profile)
       });
 
@@ -238,8 +237,10 @@ import { DialogComponent } from '../dialog/dialog.component';
   
       const formData: FormData = new FormData();
       formData.append('imageFile', this.profileImage, this.profileImage.name);
-      const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + this.authService.getToken())
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + this.authService.getToken()
+    });
       
       this.userService.uploadImage(formData, this.userForm.get('email')?.value, headers).subscribe(
         (response: HttpResponse<any>) => {
@@ -270,7 +271,7 @@ import { DialogComponent } from '../dialog/dialog.component';
       if(result=="yes"){
         this.userService.deleteUser(this.user.id).subscribe({
           next : (response) => { 
-            this.user = {  id : '', email : '', gender : '', firstName : '', lastName : '',  password : '',  post : '',  roles : [],  profile : null}
+            this.user = {  id : '', email : '', gender : '', firstName : '', lastName : '',  password : '',  post : '',  role : [],  profile : null}
             this.openSnackBar("User deleted successfully !!")
             this.userDeleted.emit();
             this.router.navigate(["/users"])

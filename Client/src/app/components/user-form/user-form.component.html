@@ -70,7 +70,7 @@
       
         <mat-form-field appearance="outline" *ngIf="!isProfile">
           <mat-label>Roles</mat-label>
-          <mat-select formControlName="roles" placeholder="Roles" multiple [compareWith]="compareRoles">
+          <mat-select formControlName="role" placeholder="Role"  [compareWith]="compareRoles">
             <mat-option *ngFor="let role of roleList" [value]="role"
               matTooltip="{{role.roleDescription}}"
               matTooltipPosition="right"

@@ -90,3 +90,7 @@ footer {
     height: 30px;
     z-index: 1;
 }
+
+mat-menu{
+    padding: 5px 10px;
+}

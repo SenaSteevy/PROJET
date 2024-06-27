@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,6 @@ import com.sivo.request.JobRequest;
 import com.sivo.service.SchedulerService;
 
 @RestController
-@CrossOrigin
 public class ScheduleController {
 
 	@Autowired
@@ -104,7 +102,7 @@ public class ScheduleController {
 		}
 	}
 
-	@GetMapping("/solve")
+	@GetMapping("/scheduler/solve")
 	public ResponseEntity<?> solve() {
 
 		return schedulerService.solve();
@@ -113,7 +111,7 @@ public class ScheduleController {
 	
 	
 	
-	@PostMapping("/updateJobList")
+	@PostMapping("/scheduler/updateJobList")
 	public ResponseEntity<?> updateJobList(@RequestBody List<Job> jobList  ){
 		return schedulerService.updateJobList(jobList);
 		

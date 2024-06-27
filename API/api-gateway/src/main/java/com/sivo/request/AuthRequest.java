@@ -14,10 +14,8 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 
+public class AuthRequest {
+    private String username;
+    private String password;
 
-public class JwtRequest {
-
-	private String username;
-	
-	private String password;
 }

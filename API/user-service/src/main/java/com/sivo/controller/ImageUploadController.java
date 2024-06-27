@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,6 @@ import com.sivo.repository.ImageRepository;
 import com.sivo.repository.UserRepository;
 
 @RestController
-@CrossOrigin
 @RequestMapping(path = "/images")
 public class ImageUploadController {
 
@@ -37,7 +35,7 @@ public class ImageUploadController {
 	  // Retrieve the user entity
 	  Optional<User> optionalUser = userRepository.findByEmail(username);
 	  if (optionalUser.isEmpty()) {
-	    return ResponseEntity.notFound().build();
+	    return ResponseEntity.noContent().build();
 	  }
 	  
 	  User user = optionalUser.get();
@@ -52,16 +50,16 @@ public class ImageUploadController {
 	}
 
 	@GetMapping(path = { "/getImage" })	
-	public ImageModel getImage(@RequestParam("username") String username) throws IOException {
+	public ResponseEntity<ImageModel> getImage(@RequestParam("username") String username) throws IOException {
 		
 		Optional<User> user  = userRepository.findByEmail(username);
 		if(user.isEmpty())
-			return null;
+			return ResponseEntity.noContent().build();
 		final Optional<ImageModel> retrievedImage = imageRepository.findByUser(user.get());
 		if(retrievedImage.isEmpty())
-			return null;
+			return ResponseEntity.noContent().build();
 		
-		return retrievedImage.get();
+		return ResponseEntity.ok(retrievedImage.get());
 	}
 	
 	@PostMapping("/delete")

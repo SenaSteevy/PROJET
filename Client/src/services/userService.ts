@@ -1,116 +1,81 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/models/User';
-import { HttpClient, HttpEvent, HttpEventType, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { EmailData } from 'src/models/EmailData';
-import { Observable, Subscriber, isEmpty, map, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { AuthService } from './authService';
 import { Role } from 'src/models/Role';
 import { FormGroup } from '@angular/forms';
+import { User } from 'src/models/User';
 import { UserRequest } from 'src/models/UserRequest';
+
 @Injectable({
-    providedIn : 'root'
+  providedIn: 'root'
 })
-
-export class UserService{
- 
-  connectedUser : any;
+export class UserService {
+  connectedUser: any;
   connectedUserHasChanged: boolean = false;
-    
-  PATH_OF_API = "http://localhost:8081/api/user"
- 
-  headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', "Bearer "+this.authService.getToken()  )
 
-  params = new HttpParams().set('username', ' ');
+  PATH_OF_API = "http://localhost:9090/user-service";
 
-  constructor( private httpClient : HttpClient, private authService :AuthService){
-    this.connectedUser = authService.getUser()
-    
+
+
+  constructor(private httpClient: HttpClient, private authService: AuthService) {
+    this.connectedUser = authService.getUser();
   }
- 
+
   
 
   uploadImage(imageData: FormData, username: string, headers: HttpHeaders): Observable<HttpResponse<any>> {
-
-    return this.httpClient.post(this.PATH_OF_API+`/image/upload?username=${username}`, imageData, {
-      headers: headers,
+    return this.httpClient.post(this.PATH_OF_API + `/images/upload?username=${username}`, imageData, {
       reportProgress: true,
-      observe: 'response' // Change observe option to 'response'
+      observe: 'response'
     });
   }
 
-  deleteImage(id: string){
-    this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
-    return this.httpClient.post(this.PATH_OF_API+`/image/delete?id=${id}`,null,{ headers: this.headers  });
+  deleteImage(id: string) {
+    return this.httpClient.post(this.PATH_OF_API + `/images/delete?id=${id}`, null);
   }
-
-  
-  
 
   getAllRoles() {
-    this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
-    return this.httpClient.get<Role[]>(this.PATH_OF_API + '/getAllRoles', { headers: this.headers })
-    
+    return this.httpClient.get<Role[]>(this.PATH_OF_API + '/roles/getAll');
   }
-  
+
   createUser(data: any) {
-    this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
-    return this.httpClient.post(this.PATH_OF_API + '/registerNewUser',data, { headers: this.headers })
-    
+    return this.httpClient.post(this.PATH_OF_API + '/users/registerNewUser', data);
   }
 
-  updateUser(userId :any, formGroup: FormGroup) {
-    this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
-    return this.httpClient.post<User>(this.PATH_OF_API + '/updateUserById/'+userId, formGroup.value, { headers: this.headers, observe : 'response' }) 
-     }
-
-
-    public login(loginData : any){
-        return this.httpClient.post(this.PATH_OF_API + "/authenticate", loginData, { headers : this.headers})
-        
-    }
-
-    public  newRegisterRequest(formData: any) {
-        return this.httpClient.post(this.PATH_OF_API + '/newRegisterRequest', formData, { headers: this.headers })
-    };
-
-    getAllUsers(){
-        this.headers = this.headers.set('Authorization', "Bearer "+this.authService.getToken() )
-        return this.httpClient.get<User[]>(this.PATH_OF_API + '/getAll', { headers: this.headers })
-
-    }
-    
-        
-  deleteUser(userId : string){
-    this.headers = this.headers.set("Authorization","Bearer "+this.authService.getToken())
-    return this.httpClient.delete(this.PATH_OF_API +"/deleteUserById/"+userId  , {headers : this.headers})
+  updateUser(userId: any, formGroup: FormGroup) {
+    return this.httpClient.post<User>(this.PATH_OF_API + '/users/updateUserById/' + userId, formGroup.value);
   }
-    
+
+  public login(loginData: any) {
+    return this.httpClient.post("http://localhost:9090/api/authenticate", loginData);
+  }
+
+  public newRegisterRequest(formData: any) {
+    return this.httpClient.post(this.PATH_OF_API + '/users/newRegisterRequest', formData);
+  }
+
+  getAllUsers() {
+    return this.httpClient.get<User[]>(this.PATH_OF_API + '/users/getAll');
+  }
+
+  deleteUser(userId: string) {
+    return this.httpClient.delete(this.PATH_OF_API + "/users/deleteUserById/" + userId);
+  }
+
   getUserById(userId: any) {
-    this.headers = this.headers.set("Authorization","Bearer "+this.authService.getToken())
-    return this.httpClient.get<User>(this.PATH_OF_API+"/getById/"+userId, {headers : this.headers})
-  
+    return this.httpClient.get<User>(this.PATH_OF_API + "/users/getById/" + userId);
   }
 
-  getImage(username : string){
-    this.headers = this.headers.set("Authorization","Bearer "+this.authService.getToken())
-    return this.httpClient.get(this.PATH_OF_API+`/image/getImage?username=${username}`, {headers : this.headers})
-  }
- 
-    
-  getUserRequests(){
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.httpClient.get<UserRequest[]>(`${this.PATH_OF_API}/getAllUserRequests`,  { headers : this.headers}) 
+  getImage(username: string) {
+    return this.httpClient.get(this.PATH_OF_API + `/images/getImage?username=${username}`);
   }
 
-  deleteUserRequest(id : any){
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.httpClient.post(`${this.PATH_OF_API}/deleteUserRequest/${id}`, { headers : this.headers}) 
+  getUserRequests() {
+    return this.httpClient.get<UserRequest[]>(`${this.PATH_OF_API}/userRequests/getAll`);
   }
-      
-      
-        
-}        
 
-
-
-
+  deleteUserRequest(id: any) {
+    return this.httpClient.post(`${this.PATH_OF_API}/userRequests/delete/${id}`,null);
+  }
+}

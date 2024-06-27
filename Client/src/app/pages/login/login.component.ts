@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   registerForm : any
   isRegistered : any = localStorage.getItem('isRegistered')
   error : any;
+
   constructor(private authService : AuthService, 
     private userService : UserService, 
     private router : Router, 
@@ -28,7 +29,9 @@ export class LoginComponent implements OnInit {
     private sanitizer : DomSanitizer) { }
 
   ngOnInit(): void {
-
+    if(!!this.userService.connectedUser){
+      this.router.navigate(['/home']);
+    }
     this.loginForm =  new FormGroup({
       username : new FormControl('',[Validators.required]),
       password : new FormControl('',[Validators.required])  
@@ -56,7 +59,7 @@ export class LoginComponent implements OnInit {
                
               this.userService.connectedUser = response.user
               this.authService.setUser(response.user)
-              this.authService.setRoles(response.user.roles)
+              this.authService.setRoles(response.user.role)
               this.authService.setToken(response.jwtToken)
               
               this.router.navigate(['/home'])     

@@ -44,186 +44,151 @@ export class JobService {
   
   
 
-  private apiUrl = 'http://localhost:8083/api';
+  private apiUrl = 'http://localhost:9090/ordo-service';
 
-  headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', "Bearer "+this.authService.getToken()  )
 
   constructor(private http: HttpClient,private authService : AuthService ) {
      this.updateJobService()
   }
 
   updateAutoPlanning(autoPlanning: AutoPlanning) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
-    return this.http.post(`${this.apiUrl}/ordo/updateAutoPlanning`,autoPlanning, { headers: headers});  }
+    return this.http.post(`${this.apiUrl}/scheduler/updateAutoPlanning`,autoPlanning );  }
  
   getAutoPlanning(){
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
-    return this.http.get<any>(`${this.apiUrl}/ordo/getAutoPlanning`, { headers: headers});
+    return this.http.get<any>(`${this.apiUrl}/scheduler/getAutoPlanning` );
 
   }
   setAutoPlanning( value : string){
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
-    return this.http.post(`${this.apiUrl}/ordo/setAutoPlanning/${value}`, { headers: headers});
+    return this.http.post(`${this.apiUrl}/scheduler/setAutoPlanning/${value}`, null );
 
   }
 
 
   simulateWithExcelFile(data: FormData) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken())
-    return this.http.post(`${this.apiUrl}/ordo/solveByExcelFile`, data, { headers: headers});
+    return this.http.post(`${this.apiUrl}/scheduler/solveByExcelFile`, data );
 
   }
 
   getTreatments() {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Treatment[]>(`${this.apiUrl}/treatments/getAllTreatments`, { headers: this.headers});
+    return this.http.get<Treatment[]>(`${this.apiUrl}/treatments/getAll` );
   }
 
   deleteTreatment(id : any){
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.post(`${this.apiUrl}/treatments/deleteTreatmentById/${id}`, { headers: this.headers});
+    return this.http.post(`${this.apiUrl}/treatments/delete/${id}`, null );
 
   }
 
   getTreatmentById(id:any){
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Treatment>(`${this.apiUrl}/treatments/getTreatmentById/${id}`, { headers: this.headers});
+    return this.http.get<Treatment>(`${this.apiUrl}/treatments/findById/${id}` );
 
   }
 
   updateTreatment(id : any, data: any){
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.post<Treatment>(`${this.apiUrl}/treatments/updateTreatmentById/${id}`,data, { headers: this.headers});
+    return this.http.post<Treatment>(`${this.apiUrl}/treatments/updateById/${id}`,data );
 
   }
 
   createTreatment(data : any){
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.post<Treatment>(`${this.apiUrl}/treatments/saveTreatment`,data, { headers: this.headers});
+    return this.http.post<Treatment>(`${this.apiUrl}/treatments/save`,data );
   }
   
  
   getJobs(): Observable<Job[]> {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Job[]>(`${this.apiUrl}/ordo/getAllJobs`, { headers: this.headers});
+    return this.http.get<Job[]>(`${this.apiUrl}/jobs/getAll` );
   }
 
   getAllPlannings(): Observable<Planning[]> {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Planning[]>(`${this.apiUrl}/ordo/getAllPlannings`, { headers : this.headers});
+    return this.http.get<Planning[]>(`${this.apiUrl}/plannings/getAll` );
   }
 
   getAllPhases() {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Phase[]>(`${this.apiUrl}/phases/getAllPhases`, { headers : this.headers})
+    return this.http.get<Phase[]>(`${this.apiUrl}/phases/getAll` )
   }
 
    makeNewPlanning()  {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Planning>(`${this.apiUrl}/ordo/solve`, { headers : this.headers})
+    return this.http.get<Planning>(`${this.apiUrl}/scheduler/solve` )
   }
 
   updateJobList(jobList: Job[]) {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.post<Job[]>(`${this.apiUrl}/ordo/updateJobList`,jobList, { headers : this.headers})
+    return this.http.post<Job[]>(`${this.apiUrl}/scheduler/updateJobList`,jobList )
   }
 
   getAllClients() {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Client[]>(`${this.apiUrl}/clients/getAllClients`, { headers : this.headers})
+    return this.http.get<Client[]>(`${this.apiUrl}/clients/getAll` )
   }
 
   getAllResources() {
-    this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-    return this.http.get<Resource[]>(`${this.apiUrl}/resources/getAllResources`, { headers : this.headers})
+    return this.http.get<Resource[]>(`${this.apiUrl}/resources/getAll` )
     }
 
     newJob(job : Job){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post(`${this.apiUrl}/ordo/createJob`,job, { headers : this.headers})  
+      return this.http.post(`${this.apiUrl}/jobs/new`,job )  
     }
   
     deleteJob(numOrder : number){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post(`${this.apiUrl}/ordo/deleteJobById/${numOrder}`, { headers : this.headers}) 
+      return this.http.post(`${this.apiUrl}/jobs/delete/${numOrder}`, null ) 
     }
 
     getJobById(id : string){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.get<Job>(`${this.apiUrl}/ordo/getJobById/${id}`, { headers : this.headers}) 
+      return this.http.get<Job>(`${this.apiUrl}/jobs/findById/${id}` ) 
     }
     updateJob(numOrder : number, job : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post(`${this.apiUrl}/ordo/updateJobById/${numOrder}`, job,  { headers : this.headers}) 
+      return this.http.post(`${this.apiUrl}/jobs/updateById/${numOrder}`, job ) 
     }
 
     getClients(){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.get<Client[]>(`${this.apiUrl}/clients/getAllClients`,  { headers : this.headers}) 
+      return this.http.get<Client[]>(`${this.apiUrl}/clients/getAll` ) 
     }
 
     getClientById(id : string){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.get<Client>(`${this.apiUrl}/clients/getClientById/${id}`,  { headers : this.headers}) 
+      return this.http.get<Client>(`${this.apiUrl}/clients/findById/${id}` ) 
     }
 
     updateClient(id : number, data : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post<Client>(`${this.apiUrl}/clients/updateClientById/${id}`,data,  { headers : this.headers}) 
+      return this.http.post<Client>(`${this.apiUrl}/clients/updateById/${id}`,data ) 
     }
 
     createClient(data : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post<Client>(`${this.apiUrl}/clients/saveClient`,data,  { headers : this.headers}) 
+      return this.http.post<Client>(`${this.apiUrl}/clients/new`,data ) 
     }
 
     deleteClient(id : number){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post(`${this.apiUrl}/clients/deleteClientById/${id}`,  { headers : this.headers}) 
+      return this.http.post(`${this.apiUrl}/clients/delete/${id}`, null ) 
     }
 
     getResources(){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.get<Resource[]>(`${this.apiUrl}/resources/getAllResources`,  { headers : this.headers}) 
+      return this.http.get<Resource[]>(`${this.apiUrl}/resources/getAll` ) 
     }
 
     getResourceById(id : string){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.get<Resource>(`${this.apiUrl}/resources/getResourceById/${id}`,  { headers : this.headers}) 
+      return this.http.get<Resource>(`${this.apiUrl}/resources/findById/${id}` ) 
     }
 
     updateResource(id : number, data : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post<Resource>(`${this.apiUrl}/resources/updateResourceById/${id}`,data,  { headers : this.headers}) 
+      return this.http.post<Resource>(`${this.apiUrl}/resources/updateById/${id}`,data ) 
     }
 
     createResource(data : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post<Resource>(`${this.apiUrl}/resources/saveResource`,data,  { headers : this.headers}) 
+      return this.http.post<Resource>(`${this.apiUrl}/resources/save`,data ) 
     }
 
     deleteResource(id : number){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post(`${this.apiUrl}/resources/deleteResourceById/${id}`,  { headers : this.headers}) 
+      return this.http.post(`${this.apiUrl}/resources/delete/${id}`, null ) 
     }
 
     getPhaseById(id:any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.get<Phase>(`${this.apiUrl}/phases/getPhaseById/${id}`,  { headers : this.headers}) 
+      return this.http.get<Phase>(`${this.apiUrl}/phases/findById/${id}` ) 
     }
     updatePhase(id : number, data : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post<Phase>(`${this.apiUrl}/phases/updatePhaseById/${id}`,data,  { headers : this.headers}) 
+      return this.http.post<Phase>(`${this.apiUrl}/phases/updateById/${id}`,data ) 
     }
 
     createPhase(data : any){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post<Phase>(`${this.apiUrl}/phases/savePhase`,data,  { headers : this.headers}) 
+      return this.http.post<Phase>(`${this.apiUrl}/phases/save`,data ) 
     }
 
     deletePhase(id : number){
-      this.headers.set('Authorization', "Bearer "+this.authService.getToken()  )
-      return this.http.post(`${this.apiUrl}/phases/deletePhaseById/${id}`,  { headers : this.headers}) 
+      return this.http.post(`${this.apiUrl}/phases/delete/${id}`, null ) 
     }
 
 }

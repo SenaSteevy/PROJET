@@ -129,7 +129,7 @@ export class UserRequestsComponent implements OnInit {
        firstName: userRequest.firstName,
        lastName: userRequest.lastName,
        post: userRequest.post,
-       roles: [],
+       role: [],
        profile: null,
        password: ''
      }

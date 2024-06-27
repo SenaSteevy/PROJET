@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +40,15 @@ public class UserService {
 	@Autowired 
 	private PermissionRepository permissionReposotory; 
 	
+	@Autowired 
+	PasswordEncoder passwordEncoder;
 	
 
 	@Autowired
 	private RegisterRequestRepository registerRequestRepository;
 	
-	@Autowired
-	PasswordEncoder passwordEncoder;
+	
+	 
 	
 	
 	public UserResponse createUser(UserRequest userRequest) {
@@ -104,7 +104,8 @@ public class UserService {
 	}
 
 	public List<User> getAll() {
-		return userRepository.findAll();
+		return  userRepository.findAll();
+		
 	}
 
 	

@@ -1,4 +1,6 @@
-package com.sivo.entity;
+package com.sivo.response;
+
+import com.sivo.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -14,10 +16,10 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 
-
-public class JwtRequest {
-
-	private String username;
+public class AuthResponse {
 	
-	private String password;
+    private User user;
+    
+    private String jwtToken;
+
 }

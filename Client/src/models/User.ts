@@ -9,6 +9,6 @@ export interface User{
     lastName : string,
     password : string
     post : string,
-    roles : Role[],
+    role : Role[],
     profile : FileHandle | null
 }
