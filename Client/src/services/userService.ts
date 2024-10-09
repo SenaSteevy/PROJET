@@ -22,7 +22,9 @@ export class UserService {
     this.connectedUser = authService.getUser();
   }
 
-  
+  public login(loginData: any) {
+    return this.httpClient.post("http://34.42.223.139:9090/api/authenticate", loginData);
+  }
 
   uploadImage(imageData: FormData, username: string, headers: HttpHeaders): Observable<HttpResponse<any>> {
     return this.httpClient.post(this.PATH_OF_API + `/images/upload?username=${username}`, imageData, {
@@ -47,9 +49,6 @@ export class UserService {
     return this.httpClient.post<User>(this.PATH_OF_API + '/users/updateUserById/' + userId, formGroup.value);
   }
 
-  public login(loginData: any) {
-    return this.httpClient.post("http://localhost:9090/api/authenticate", loginData);
-  }
 
   public newRegisterRequest(formData: any) {
     return this.httpClient.post(this.PATH_OF_API + '/users/newRegisterRequest', formData);
