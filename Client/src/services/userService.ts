@@ -14,7 +14,7 @@ export class UserService {
   connectedUser: any;
   connectedUserHasChanged: boolean = false;
 
-  PATH_OF_API = "http://localhost:9090/user-service";
+  PATH_OF_API = "http://34.42.223.139:9090/user-service";
 
 
 
