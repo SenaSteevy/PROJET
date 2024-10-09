@@ -44,7 +44,7 @@ export class JobService {
   
   
 
-  private apiUrl = 'http://localhost:9090/ordo-service';
+  private apiUrl = 'http://34.42.223.139:9090/ordo-service';
 
 
   constructor(private http: HttpClient,private authService : AuthService ) {
