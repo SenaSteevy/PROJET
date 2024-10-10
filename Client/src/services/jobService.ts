@@ -11,6 +11,7 @@ import { Resource } from 'src/models/Resource';
 import { Treatment } from 'src/models/Treatment';
 import { UserRequest } from 'src/models/UserRequest';
 import { AutoPlanning } from 'src/models/AutoPlanning';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,7 @@ export class JobService {
   
   
 
-  private apiUrl = 'http://localhost:9090/ordo-service';
+  private apiUrl = environment.apiUrl+'ordo-service';
 
 
   constructor(private http: HttpClient,private authService : AuthService ) {
