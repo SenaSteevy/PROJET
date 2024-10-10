@@ -23,8 +23,6 @@ export class UserService {
     this.connectedUser = authService.getUser();
   }
 
-  
-
   uploadImage(imageData: FormData, username: string, headers: HttpHeaders): Observable<HttpResponse<any>> {
     return this.httpClient.post(this.PATH_OF_API + `user-service/images/upload?username=${username}`, imageData, {
       reportProgress: true,
