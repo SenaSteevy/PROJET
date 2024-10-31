@@ -88,12 +88,12 @@ public class UserService {
 	    user = roleRepository.save(user);
 
 	   
-	    User user1 = new User("anesyveets@gmail.com", "Male", "admin", "admin", passwordEncoder.encode("admin123"), "Admin", admin);
+	    User user1 = new User("admin@gmail.com", "Male", "admin", "admin", passwordEncoder.encode("admin123"), "Admin", admin);
 	    user1 = userRepository.save(user1);
 
 	   
-	    User user2 = new User("user1@gmail.com", "Male", "sena", "steevy", passwordEncoder.encode("user123"), "user", user);
-	    user2 = userRepository.save(user2);
+	   /* User user2 = new User("user1@gmail.com", "Male", "user", "steevy", passwordEncoder.encode("user123"), "user", user);
+	    user2 = userRepository.save(user2);*/
 	}
 
 
@@ -148,6 +148,7 @@ public class UserService {
 			return ResponseEntity.notFound().build();
 		
 		User updatedUser = new User(userRequest);
+		updatedUser.setPassword(getEncryptedPassword(userRequest.getPassword()));
 		updatedUser.setId(id);
 		updatedUser =  userRepository.save(updatedUser);
 		return ResponseEntity.ok(updatedUser);

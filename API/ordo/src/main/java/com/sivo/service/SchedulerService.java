@@ -738,9 +738,9 @@ public class SchedulerService {
 	    workbook.close();
 	    
 	    return ResponseEntity.ok()
-	            .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
-	            .header("Content-Disposition", "attachment;filename=filename.xlsx")
-	            .body(byteArrayOutputStream.toByteArray());
+	    	    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+	    	    .header("Content-Disposition", "attachment;filename=Result.xlsx")
+	    	    .body(byteArrayOutputStream.toByteArray());
 	}
 
 	private String parseLocalDateTime(LocalDateTime localDateTime) {

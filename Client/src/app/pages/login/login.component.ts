@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
     else{
       this.userService.newRegisterRequest(this.registerForm.value).subscribe({
         next : (response : any) =>{
-          console.log(response)
           let title = "Registration submited"
           let message = response.firstName +" "+response.lastName+", you have succesfully submited your registration. A Manager will allow your access very soon." 
           this.openDialog( title, message)
@@ -98,7 +97,6 @@ export class LoginComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log("dialog result : ", result);
       localStorage.setItem("isRegistered", "yes")
     });
   }

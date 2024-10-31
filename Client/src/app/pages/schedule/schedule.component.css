@@ -26,11 +26,39 @@
     pad: 10px 10px;
 }
 
+mat-expansion-panel-header{
+    display:flex;
+    justify-content: space-around;
+}
 .text{
     text-align: end; 
     font-weight: bold;
+    margin-right: 10px;
 }
 
+.very-good {
+    color: green;
+    font:500;
+  }
+  
+  .pretty-good {
+    color: darkorange;
+    font:500;
+
+  }
+  
+  .average {
+    color: goldenrod;
+    font:500;
+
+  }
+  
+  .bad {
+    color: red;
+    font:500;
+
+  }
+  
 mat-form-field{
     width: fit-content;
 }

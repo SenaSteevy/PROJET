@@ -67,7 +67,7 @@
 
                 <mat-step label="Planification">
                     <div fxFlex fxLayout="column" fxLayoutAlign="start center"  fxLayoutGap="20px">
-                        <div *ngIf="!!!loading" #noPlanning fxFlex fxLayoutAlign="center center">
+                        <div *ngIf="loading" #noPlanning fxFlex fxLayoutAlign="center center">
                             <p>Fill the previous step first.</p>                  
                         </div>
                         
@@ -78,9 +78,9 @@
                             <span style=" color : rgb(223, 49, 49)">An error occured during the planification. Please try again or call an administrator if the problem persist.<br> </span>   
                         </div>
 
-                        <div fxFlex fxLayout="column" fxLayoutGap="10px" *ngIf="!error">
+                        <div fxFlex fxLayout="column" fxLayoutGap="10px" *ngIf="!error" fxLayoutAlign="center center">
                             <app-lottie-animation-view *ngIf="loading"  [iconWidth]="'30vw'" [iconHeight]="'10vh'" animationPath="loading.json" [loop]="true"></app-lottie-animation-view>
-                            <app-lottie-animation-view *ngIf="!loading && !!plannedFile" [iconWidth]="'30vw'" [iconHeight]="'10vh'" animationPath=" loading.json" [loop]="true"></app-lottie-animation-view> 
+                            <app-lottie-animation-view *ngIf="!!plannedFile" [iconWidth]="'30vw'" [iconHeight]="'10vh'" animationPath="good-rate.json" [loop]="true"></app-lottie-animation-view> 
                             <span *ngIf="!!plannedFile">Your planning is ready</span> 
                             
                            <button mat-raised-button *ngIf="!!plannedFile" (click)="downloadFile()">

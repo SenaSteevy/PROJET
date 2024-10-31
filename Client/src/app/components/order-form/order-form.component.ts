@@ -65,7 +65,6 @@ nullTreatment : Treatment = {
       
       this.initializeForm();
 
-      console.log("isUpdate :",this.isUpdate)
     });
 
 

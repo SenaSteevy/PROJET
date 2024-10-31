@@ -1,3 +1,5 @@
+import { SelectionModel } from '@angular/cdk/collections';
+import { Dialog } from '@angular/cdk/dialog';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -5,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 import { User } from 'src/models/User';
 import { UserRequest } from 'src/models/UserRequest';
 import { JobService } from 'src/services/jobService';
@@ -17,11 +20,14 @@ import { UserService } from 'src/services/userService';
 })
 export class UserRequestsComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'id','name','email','post', 'actions'];
+  displayedColumns: string[] = [ 'id','name','email','post', 'actions','select'];
   userRequestsDataSource: MatTableDataSource<UserRequest> = new MatTableDataSource<UserRequest>();
   paginatedData: MatTableDataSource<UserRequest> = new MatTableDataSource<UserRequest>();
   @ViewChild(MatPaginator) paginator: any;
   userRequestList: UserRequest[] = [];
+  state : 'loading' | 'error' | 'ready' = 'loading';
+  selection = new SelectionModel<UserRequest>(true, []);
+  selectAllChecked = false;
 
   constructor(private jobService : JobService,
     private dialog : MatDialog,
@@ -42,8 +48,12 @@ export class UserRequestsComponent implements OnInit {
         this.userRequestsDataSource.data.push(...response);
         this.paginatedData = new MatTableDataSource<UserRequest>( this.userRequestsDataSource.data.slice(0, 10))
         this.userRequestList = response
+        this.state = 'ready'
       },
-      error: (error: any) => console.log('error during getAllUserRequests:', error),
+      error: (error: any) => {
+        this.state = 'error'
+        console.log('error during getAllUserRequests:', error)
+      },
       complete :  () => {
         this.userRequestsDataSource.paginator = this.paginator; 
       }
@@ -55,6 +65,59 @@ export class UserRequestsComponent implements OnInit {
     const endIndex = startIndex + event.pageSize;
     const paginatedData = this.userRequestsDataSource.data.slice(startIndex, endIndex);
     this.paginatedData = new MatTableDataSource<UserRequest>(paginatedData);
+  }
+
+  selectRow(checked: boolean, row: UserRequest): void {
+    if (checked) {
+      this.selection.select(row);
+    } else {
+      this.selection.deselect(row);
+    }
+  }
+  applyAction(action: string): void {
+    const selectedUserRequests = this.selection.selected;
+    // Apply the action to selected tasks
+    switch (action) {
+      case 'Delete':
+        this.deleteUserRequests(selectedUserRequests);
+  
+    }
+  }
+
+  selectAllRows(): void {
+    if (this.selectAllChecked) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.paginatedData.data);
+    }
+    this.selectAllChecked = !this.selectAllChecked;
+  }
+
+  deleteUserRequests(userRequest: UserRequest[]): void {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+
+      width: '400px',
+      data : { title : "Delete register requests ?", content : `Are you sure you want to delete these register requests ?`}
+    })
+
+    dialogRef.afterClosed().subscribe((result : string) =>{
+      if(result=="yes"){
+      let errors = 0;
+      userRequest.forEach((userRequest) => {
+        this.userService.deleteUserRequest(userRequest.id).subscribe({
+          error : (error : any ) => {
+            console.log("error during deleting userRequest :"+userRequest.firstName, error) 
+            errors++}
+        })    
+      })
+      if(errors == 0){ 
+        setTimeout(()=>{
+          this.getDataSource();
+        this.openSnackBar("The register request list selected was deleted successfully.")
+        }, 2000)
+        }
+      }
+    })
   }
 
   applyFilter(event: Event) {
@@ -95,17 +158,15 @@ export class UserRequestsComponent implements OnInit {
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
 
       width: '400px',
-      data : { title : "Delete UserRequest ?", content : `Are you sure you want to delete this register request ?`}
+      data : { title : "Delete register request ?", content : `Are you sure you want to delete this register request ?`}
     })
 
     dialogRef.afterClosed().subscribe((result : string) =>{
       if(result=="yes"){
 
-        console.log("userRequest id : ",userRequest.id)
-
         this.userService.deleteUserRequest(userRequest.id).subscribe({
           next : (response : any)  => {  
-            this.openSnackBar(" UserRequest Deleted.")
+            this.openSnackBar("Request Deleted.")
             this.getDataSource()
           },
           error : (error: any) => { console.error('Error deleting userRequest', error); } 
@@ -122,23 +183,58 @@ export class UserRequestsComponent implements OnInit {
 
   acceptUser(userRequest : UserRequest){
 
-     const user : User = {
-       id: "",
-       email: userRequest.email,
-       gender: userRequest.gender,
-       firstName: userRequest.firstName,
-       lastName: userRequest.lastName,
-       post: userRequest.post,
-       role: [],
-       profile: null,
-       password: ''
-     }
-
-     this.userService.createUser(user).subscribe({
+    this.userService.getRoleByName("User").subscribe({
       next : (response : any) => {
-        this.router.navigate(["users/edit/response.id"])
+
+        const user : User = {
+          id: "",
+          email: userRequest.email,
+          gender: userRequest.gender,
+          firstName: userRequest.firstName,
+          lastName: userRequest.lastName,
+          post: userRequest.post,
+          role: response,
+          profile: null,
+          password: ''
+        }
+   
+        let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+   
+         width: '400px',
+         data : { title : "Accept UserRequest ?", content : `Are you sure you want to add this person as a new user of the app ?`}
+       })
+   
+       dialogRef.afterClosed().subscribe((result : string) =>{
+         if(result=="yes"){
+           this.userService.createUser(user).subscribe({
+             next : (response : any) => {
+               if(response.id==0){
+                this.dialog.open(DialogComponent, {
+                  width: '400px',
+                  data : { title : "User already exist", message : `The person is already a user. We will remove this request then.`}
+                })}
+
+               this.userService.deleteUserRequest(userRequest.id).subscribe({
+                next : (response : any)  => {  
+                  this.openSnackBar("Request Deleted.")
+                },
+                error : (error: any) => { console.error('Error deleting userRequest', error); } 
+              })
+              this.router.navigate([`users/${response.id}/edit`])
+            },
+            error : (error : any) => {
+              console.log("error when creating new user :", error)
+            }
+          })
+         }
+       })
+      },
+      error : (error : any) => {
+        console.log("error when creating new user :", error)
       }
-     })
+    })
+
+     
   }
 
 

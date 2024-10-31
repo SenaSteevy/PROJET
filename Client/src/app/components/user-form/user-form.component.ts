@@ -82,12 +82,12 @@ import { DialogComponent } from '../dialog/dialog.component';
         profile : new FormControl(this.user?.profile)
       });
 
-
-      if(!this.user){
-        this.userForm.get('confirmPassword')?.setValidators([Validators.required, this.matchPassword.bind(this)]);
+      if(this.isUsersPage){
+        this.userForm.get('gender')?.disable()
+        this.userForm.get('role')?.disable()
       }
-     
-      if(this.isUsersPage){ this.userForm.disable()}
+      this.userForm.get('confirmPassword')?.setValidators([Validators.required, this.matchPassword.bind(this)]);
+      
     }
 
     matchPassword(): ValidationErrors | null {

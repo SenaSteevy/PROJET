@@ -11,7 +11,7 @@
         <button  class="button" mat-raised-button color="primary" routerLink="new"> <mat-icon>add</mat-icon>New User</button>
       </div>
       
-      <div>
+      <div *ngIf="state==='ready'">
 
         <table mat-table [dataSource]="dataSource"  class="mat-elevation-z8">
           <!-- Profile Column -->
@@ -50,7 +50,9 @@
           class="hover-row animate-row" [style.animation-delay.ms]="(i+1) * 500"></tr>
       
           <tr class="mat-row" *matNoDataRow >
-            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            <td class="mat-cell" colspan="4" style="text-align: center;">
+              {{ input.value ? 'No data matching this filter: ' + input.value : 'No data found.' }}
+            </td>              
           </tr>
 
         </table>
@@ -61,6 +63,9 @@
             [pageSizeOptions]="[5, 10, 20]"
             showFirstLastButtons>
         </mat-paginator>
+      </div>
+      <div class="error" *ngIf="state==='error'">
+        <span>Oups! An unexpected error occured. Please contact an Administrator if it persist.</span>
       </div>
     </div>
 

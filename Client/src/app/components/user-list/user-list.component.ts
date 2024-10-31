@@ -40,7 +40,8 @@ export class UserListComponent implements  AfterViewInit {
   dataSource: MatTableDataSource<any>;
   selectedUser : any
   animateRows = false;
-
+  state : 'loading' | 'error' | 'ready' = 'loading';
+  
   constructor(private userService: UserService, 
     private dialog: MatDialog, 
     private sanitizer : DomSanitizer) {
@@ -74,9 +75,11 @@ export class UserListComponent implements  AfterViewInit {
         this.userList = response;
         this.dataSource =  new MatTableDataSource(this.userList);
         this.loadProfileImages();
+        this.state = 'ready'
       },
       (error: any) => {
         console.log(error);
+        this.state='error';
       }
     );
   }

@@ -7,9 +7,39 @@ mat-sidenav-container{
 mat-accordion{
     overflow: hidden;
 }
+
+::ng-deep mat-expansion-panel {
+    box-shadow: none!important;
+  }
+
+@media (max-width: 575.98px) {
+
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    mat-sidenav{
+        max-width:95%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    mat-sidenav{
+        max-width:60%;
+    }
+}
+
+@media (min-width: 992px)  {
+    mat-sidenav{
+        max-width:25%;
+    }
+}
+
+
+
 mat-sidenav{
     overflow: hidden;
 }
+
 .side-nav-content{
     position: flex;
     width: 100vw;
@@ -62,6 +92,7 @@ mat-sidenav{
     position: sticky;
     left: 0%;
     width: 8px;
+    margin-left: -8px;
     height: inherit;
     background-color: rgba(51, 92, 167, 0.884);;
 }
@@ -93,4 +124,17 @@ footer {
 
 mat-menu{
     padding: 5px 10px;
+}
+
+mat-list-item{
+    padding: 0px!important;
+}
+.mat-list-item{
+    width:100%;
+}
+.nav-item{
+    margin-left:16px;
+    display: flex;
+    align-items: center;
+    width:100%;
 }

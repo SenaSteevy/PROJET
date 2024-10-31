@@ -164,7 +164,7 @@ export class AppComponent implements OnInit, DoCheck{
    
   }
   ngDoCheck(): void {
-    const user = this.userService.connectedUser
+    const user = this.authService.getUser()
     if (user != undefined) {
       this.connectedUser = user;
     }

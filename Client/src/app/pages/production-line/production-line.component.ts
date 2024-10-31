@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class ProductionLineComponent implements OnInit {
 
   phaseList: Phase[] = [  ];
-
+  error = false;
  
   constructor(private jobService : JobService, private router : Router) {
     
@@ -20,7 +20,9 @@ export class ProductionLineComponent implements OnInit {
       next :(response : Phase[]) => {
         this.phaseList = response
       },
-      error : (error) =>{console.log("error getting phasList",error)}
+      error : (error) =>{
+        console.log("error getting phasList",error);
+      error=true;}
     })
    }
 

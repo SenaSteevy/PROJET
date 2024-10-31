@@ -12,8 +12,21 @@
                 <mat-label>Filter</mat-label>
                 <input  matInput type="text" width="inherit"  placeholder="Ex : userRequest name " (keyup)="applyFilter($event)" #input>
             </mat-form-field>
+           
+            <button  class="button" mat-raised-button color="accent" [disabled]="selection.isEmpty()" [matMenuTriggerFor]="applyMenu">
+                Selected requests
+                <mat-icon>arrow_right</mat-icon>
+            </button>
+        
+            <!-- Apply Menu -->
+            <mat-menu #applyMenu="matMenu">
+            <button mat-menu-item (click)="applyAction('Delete')"><mat-icon>delete</mat-icon> Delete</button>
+            </mat-menu>
+    
+            <!-- Select All Button -->
+            <button  class="button" mat-raised-button color="primary" (click)="selectAllRows()">{{ selectAllChecked ? 'Deselect All' : 'Select All' }}</button>
         </div>
-        <ng-container *ngIf="paginatedData.data.length > 0 ; else loading " >    
+        <ng-container *ngIf="paginatedData.data.length >= 0 && state==='ready'; else loading " >    
            
             <table mat-table [dataSource]="paginatedData">
               
@@ -45,11 +58,21 @@
                 <ng-container matColumnDef="actions" >
                     <th mat-header-cell *matHeaderCellDef > </th>
                     <td mat-cell *matCellDef="let userRequest" >
-                            <button mat-mini-fab color="primary" style="margin : 0px 10px" (onClick)="acceptUser(userRequest)"><mat-icon>add</mat-icon> </button>
+                            <button mat-mini-fab color="primary" style="margin : 0px 10px" (click)="acceptUser(userRequest)"><mat-icon>add</mat-icon> </button>
                             <button mat-mini-fab color="warn" (click)="deleteUserRequest(userRequest)"><mat-icon>delete</mat-icon> </button>
                     </td>
                 </ng-container>
                 
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let task">
+                      <mat-checkbox style="align-self: flex-end;"
+                      (click)="$event.stopPropagation()"
+                      (change)="selectRow($event.checked, task)"
+                      [checked]="selection.isSelected(task)"
+                      ></mat-checkbox>
+                    </td>
+                  </ng-container>
                     
                 <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header" class="animate-row"></tr>
 
@@ -60,7 +83,9 @@
                 
                 
                 <tr class="mat-row" *matNoDataRow>
-                  <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+                    <td class="mat-cell" colspan="6" style="text-align: center;">
+                        {{ input.value ? 'No data matching this filter: ' + input.value : 'No data found.' }}
+                    </td>   
                 </tr>
                              
                 
@@ -76,7 +101,10 @@
         </ng-container>
         
         <ng-template #loading>
-            <div class="lottie" fxFlex fxLayoutAlign="center center">
+            <div *ngIf="state==='error'" class="error">
+                <span>Oups! An unexpected error occured. Please contact an Administrator if it persist.</span>
+            </div>
+            <div class="lottie" fxFlex fxLayoutAlign="center center" *ngIf="state==='loading'">
                 <app-lottie-animation-view  [iconWidth]="'30vw'" [iconHeight]="'10vh'" [animationPath]="'loading-grey.json'" [loop]="true"></app-lottie-animation-view>
             </div>
         </ng-template>

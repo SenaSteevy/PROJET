@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class JobService {
+ 
   
 
   phaseList : Phase[] = []
@@ -64,9 +65,8 @@ export class JobService {
 
   }
 
-
   simulateWithExcelFile(data: FormData) {
-    return this.http.post(`${this.apiUrl}/scheduler/solveByExcelFile`, data );
+    return this.http.post(`${this.apiUrl}/scheduler/solveByExcelFile`, data, { responseType : 'blob'} );
 
   }
 

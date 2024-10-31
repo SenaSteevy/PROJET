@@ -13,7 +13,7 @@
       
       <mat-card class="login-tab" >
         <mat-card-content >
-            <mat-tab-group dynamicHeight >
+            <mat-tab-group>
                 <mat-tab label="Log In">
                         <form [formGroup]="loginForm" (ngSubmit)="login()" fxFlex fxLayout="column" fxLayoutAlign=" center ">
                             <div class="profile"></div>
@@ -29,33 +29,33 @@
                         </form>
                     </mat-tab>
                 <mat-tab label="Register">
-                    <form [formGroup]="registerForm" (ngSubmit)="register()" fxFlex fxLayout="column" fxLayoutAlign=" center ">
+                    <form [formGroup]="registerForm" (ngSubmit)="register()" fxFlex fxLayout="column wrap" fxLayoutAlign="start center ">
                         <div class="profile"></div>
                             <span>Register if you are new here. </span>
                             
-                            <div fxFlex fxLayout="row wrap" fxLayoutGap="20px" style="margin-top : 5px;" >
-                                <mat-form-field appearance="outline" >
-                                    <input matInput placeholder="First Name" formControlName="firstName">
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" >
-                                    <input matInput placeholder="Last Name" formControlName="lastName">
-                                </mat-form-field>
-                            </div>
+                            <mat-form-field appearance="outline" >
+                                <input matInput placeholder="First Name" formControlName="firstName">
+                            </mat-form-field>
 
-                            <div fxFlex fxLayout="row wrap" fxLayoutGap="20px" style="margin-top : 5px;" >        
-                                <mat-form-field appearance="outline" >
-                                    <input matInput type="email" placeholder="Email" formControlName="email">
-                                </mat-form-field>
-                                <mat-form-field appearance="outline" >
-                                    <mat-select matInput required placeholder="Gender" formControlName="gender">
-                                        <mat-option value="Male">Male</mat-option>
-                                        <mat-option value="Female">Female</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
+                            <mat-form-field appearance="outline" >
+                                <input matInput placeholder="Last Name" formControlName="lastName">
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" >
+                                <input matInput type="email" placeholder="Email" formControlName="email">
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" >
+                                <mat-select matInput required placeholder="Gender" formControlName="gender">
+                                    <mat-option value="Male">Male</mat-option>
+                                    <mat-option value="Female">Female</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
                         <mat-form-field appearance="outline" >
                             <input matInput type="text" placeholder="Current post at Sivo" formControlName="post">
                         </mat-form-field>
+
                         <button class="button" mat-raised-button  [disabled]="registerForm.invalid" type="submit" color="primary">Register</button>
                     </form>
                 </mat-tab>

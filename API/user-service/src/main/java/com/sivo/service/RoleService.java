@@ -1,6 +1,7 @@
 package com.sivo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,5 +66,44 @@ public class RoleService {
 		return ResponseEntity.ok(permissionList);
 	}
 	
+public ResponseEntity<?> findById(Long id) {
+		
+		Optional<Role> role = roleRepository.findById(id);
+		
+		if(role.isEmpty())
+			return ResponseEntity.notFound().build();
+		
+		return ResponseEntity.ok(role.get());
+	}
+
+	public ResponseEntity<?> deleteRoleById(Long id) {
+		
+		Optional<Role> role = roleRepository.findById(id);
+		
+		if(role.isEmpty())
+			return ResponseEntity.notFound().build();
+		roleRepository.delete(role.get());
+		return ResponseEntity.ok().build();
+	}
+
+	public ResponseEntity<Role> updateRole(Long id, RoleRequest roleRequest) {
+		
+		Optional<Role> optionalRole  = roleRepository.findById(id);
+		if(optionalRole.isEmpty())
+			return ResponseEntity.notFound().build();
+		
+		Role updatedRole = new Role(roleRequest);
+		updatedRole.setId(id);
+		updatedRole =  roleRepository.save(updatedRole);
+		return ResponseEntity.ok(updatedRole);
+	}
+
+	public ResponseEntity<Role> getRoleByName(String roleName) {
+		Optional<Role> optionalRole  = roleRepository.findByRoleName(roleName);
+		if(optionalRole.isEmpty())
+			return ResponseEntity.notFound().build();
+		
+		return ResponseEntity.ok(optionalRole.get());
+	}
 
 }

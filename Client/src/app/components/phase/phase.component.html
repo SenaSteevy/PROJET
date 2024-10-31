@@ -7,7 +7,7 @@
   <mat-divider></mat-divider>
   <mat-card-content>
     
-    <mat-stepper >
+    <mat-horizontal-stepper *ngIf="stepperOrientation === 'horizontal'" #stepper>
       <mat-step *ngFor="let timeslot of timeslots" [label]="timeslot.dayOfWeek">
   
         <div  fxFlex fxLayoutAlign="space-evenly center" >
@@ -23,9 +23,28 @@
             <input matInput  type="time" [value]="timeslot.endTime" readonly />
           </mat-form-field>
         </div>
-        </mat-step>
-      </mat-stepper>
+        </mat-step>    
+      </mat-horizontal-stepper>
+    
+    <mat-vertical-stepper *ngIf="stepperOrientation === 'vertical'" #stepper>
+      <mat-step *ngFor="let timeslot of timeslots" [label]="timeslot.dayOfWeek">
+  
+        <div  fxFlex fxLayoutAlign="space-evenly center" >
 
+          <mat-checkbox [(ngModel)]="timeslot.enabled" disabled>Schedule</mat-checkbox>
+          
+          <mat-form-field>
+            <mat-label>Start Time</mat-label>
+            <input matInput type="time" [value]="timeslot.startTime" readonly />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>End Time</mat-label>
+            <input matInput  type="time" [value]="timeslot.endTime" readonly />
+          </mat-form-field>
+        </div>
+      </mat-step>
+    </mat-vertical-stepper>
+    
   </mat-card-content>
   <mat-divider></mat-divider>
 

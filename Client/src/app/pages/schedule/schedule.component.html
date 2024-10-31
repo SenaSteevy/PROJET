@@ -56,9 +56,8 @@
         (mouseleave)="stopLottieAnimation(i)">
           <mat-expansion-panel-header>
             <mat-panel-title class="text" >{{ filteredPlannings[i].createdAt | localDateTimeFormat}}</mat-panel-title>
-            <mat-panel-description > <span class="text"> SUMMARY :</span>
-              <app-lottie-animation-view [animationPath]="getIconName(filteredPlannings[i].rxRate)" iconWidth="20" iconHeight="20"></app-lottie-animation-view>
-              <span class="text" >{{ getRateText(plannings[i].rxRate) }}</span>
+            <mat-panel-description > <span> Evaluation : </span>
+              <span  [ngClass]="getRateText(plannings[i].rxRate)" >{{ getRateText(plannings[i].rxRate) }}</span>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <div class="panel-content" fxFlex fxLayout="column" fxLayoutAlign="center ">
@@ -106,9 +105,8 @@
         (mouseleave)="stopLottieAnimation(0)">
           <mat-expansion-panel-header>
             <mat-panel-title class="text" >{{ plannings[0].createdAt | localDateTimeFormat}}</mat-panel-title>
-            <mat-panel-description > <span class="text"> SUMMARY :</span>
-              <app-lottie-animation-view [animationPath]="getIconName(plannings[0].rxRate)" iconWidth="20" iconHeight="20"></app-lottie-animation-view>
-              <span class="text" >{{ getRateText(plannings[0].rxRate) }}</span>
+            <mat-panel-description > <span class="text"> Evaluation : </span>
+              <span [ngClass]="getRateText(plannings[0].rxRate)" >{{ getRateText(plannings[0].rxRate) }}</span>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <div class="panel-content" fxFlex fxLayout="column" fxLayoutAlign="center ">
@@ -156,9 +154,9 @@
         (mouseleave)="stopLottieAnimation(i)">
           <mat-expansion-panel-header>
             <mat-panel-title class="text" >{{ planning.createdAt | localDateTimeFormat}}</mat-panel-title>
-            <mat-panel-description > <span class="text"> SUMMARY :</span>
-              <app-lottie-animation-view [animationPath]="getIconName(planning.rxRate)" iconWidth="20" iconHeight="20"></app-lottie-animation-view>
-              <span class="text" >{{ getRateText(planning.rxRate) }}</span>
+            <mat-panel-description > 
+              <span class="text"> Evaluation : </span>
+              <span [ngClass]="getRateText(plannings[i].rxRate)" >{{ getRateText(planning.rxRate) }}</span>
             </mat-panel-description>
           </mat-expansion-panel-header>
           <div class="panel-content" fxFlex fxLayout="column" fxLayoutAlign="center ">

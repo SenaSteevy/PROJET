@@ -72,6 +72,7 @@ export class ResourceFormComponent implements OnInit {
                   this.resource = response
                   this.openSnackBar("Resource Updated Successfully.")
                   this.initializeForm()
+                  this.router.navigate(["/resources"])
                 },
                 error : (error) => { console.log("error updating resource ",error)}
               })

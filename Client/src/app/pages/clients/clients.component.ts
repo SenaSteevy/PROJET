@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -13,11 +14,15 @@ import { JobService } from 'src/services/jobService';
   styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent implements OnInit {
-  displayedColumns: string[] = [ 'id','name','address','email','tel', 'actions'];
+  displayedColumns: string[] = [ 'id','name','address','email','tel', 'actions','select'];
   clientsDataSource: MatTableDataSource<Client> = new MatTableDataSource<Client>();
   paginatedData: MatTableDataSource<Client> = new MatTableDataSource<Client>();
+  selection = new SelectionModel<Client>(true, []);
+  selectAllChecked = false;
+
   @ViewChild(MatPaginator) paginator: any;
   clientList: Client[] = [];
+  state : 'loading' | 'error' | 'ready' = 'loading';
 
   constructor(private jobService : JobService,
     private dialog : MatDialog,
@@ -36,8 +41,11 @@ export class ClientsComponent implements OnInit {
         this.clientsDataSource.data.push(...response);
         this.paginatedData = new MatTableDataSource<Client>( this.clientsDataSource.data.slice(0, 10))
         this.clientList = response
+        this.state = 'ready';
       },
-      error: (error: any) => console.log('error during getAllClients:', error),
+      error: (error: any) => {
+        console.log('error during getAllClients:', error);
+        this.state= 'error';      },
       complete :  () => {
         this.clientsDataSource.paginator = this.paginator; 
       }
@@ -49,6 +57,60 @@ export class ClientsComponent implements OnInit {
     const endIndex = startIndex + event.pageSize;
     const paginatedData = this.clientsDataSource.data.slice(startIndex, endIndex);
     this.paginatedData = new MatTableDataSource<Client>(paginatedData);
+  }
+
+  selectRow(checked: boolean, row: Client): void {
+    if (checked) {
+      this.selection.select(row);
+    } else {
+      this.selection.deselect(row);
+    }
+  }
+  applyAction(action: string): void {
+    const selectedClients = this.selection.selected;
+    // Apply the action to selected tasks
+    switch (action) {
+      case 'Delete':
+        this.deleteClients(selectedClients);
+  
+    }
+  }
+
+  selectAllRows(): void {
+    if (this.selectAllChecked) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.paginatedData.data);
+    }
+    this.selectAllChecked = !this.selectAllChecked;
+  }
+
+  deleteClients(client: Client[]): void {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+
+      width: '400px',
+      data : { title : "Delete Clients ?", content : `Are you sure you want to delete these clients ? This will delete all related orders of these clients.`}
+    })
+
+    dialogRef.afterClosed().subscribe((result : string) =>{
+      if(result=="yes"){
+      let errors = 0;
+      client.forEach((client) => {
+        this.jobService.deleteClient(client.id).subscribe({
+          error : (error : any ) => {
+            console.log("error during deleting client :"+client.name, error) 
+            errors++}
+        })    
+      })
+      if(errors == 0){ 
+        setTimeout(()=>{
+        this.getDataSource();
+        this.openSnackBar("Client list selected was deleted successfully.")
+        }, 2000)
+      }
+    }
+    })
+    
   }
 
   applyFilter(event: Event) {

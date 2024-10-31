@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -13,11 +14,14 @@ import { JobService } from 'src/services/jobService';
   styleUrls: ['./treatments.component.css']
 })
 export class TreatmentsComponent implements OnInit {
-  displayedColumns: string[] = [ 'id','description','phaseName', 'actions'];
+  displayedColumns: string[] = [ 'select','id','description','phaseName', 'actions'];
   treatmentsDataSource: MatTableDataSource<Treatment> = new MatTableDataSource<Treatment>();
   paginatedData: MatTableDataSource<Treatment> = new MatTableDataSource<Treatment>();
   @ViewChild(MatPaginator) paginator: any;
   treatmentList: Treatment[] = [];
+  state : 'loading' | 'error' | 'ready' = 'loading';
+  selection = new SelectionModel<Treatment>(true, []);
+  selectAllChecked = false;
 
   constructor(private jobService : JobService,
     private dialog : MatDialog,
@@ -36,8 +40,12 @@ export class TreatmentsComponent implements OnInit {
         this.treatmentsDataSource.data.push(...response);
         this.paginatedData = new MatTableDataSource<Treatment>( this.treatmentsDataSource.data.slice(0, 10))
         this.treatmentList = response
+        this.state= 'ready'
       },
-      error: (error: any) => console.log('error during getAllTreatments:', error),
+      error: (error: any) =>{
+        this.state = 'error'
+        console.log('error during getAllTreatments:', error)
+      },
       complete :  () => {
         this.treatmentsDataSource.paginator = this.paginator; 
       }
@@ -49,6 +57,59 @@ export class TreatmentsComponent implements OnInit {
     const endIndex = startIndex + event.pageSize;
     const paginatedData = this.treatmentsDataSource.data.slice(startIndex, endIndex);
     this.paginatedData = new MatTableDataSource<Treatment>(paginatedData);
+  }
+
+  selectRow(checked: boolean, row: Treatment): void {
+    if (checked) {
+      this.selection.select(row);
+    } else {
+      this.selection.deselect(row);
+    }
+  }
+  applyAction(action: string): void {
+    const selectedTreatments = this.selection.selected;
+    // Apply the action to selected tasks
+    switch (action) {
+      case 'Delete':
+        this.deleteTreatments(selectedTreatments);
+  
+    }
+  }
+
+  selectAllRows(): void {
+    if (this.selectAllChecked) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.paginatedData.data);
+    }
+    this.selectAllChecked = !this.selectAllChecked;
+  }
+
+  deleteTreatments(treatment: Treatment[]): void {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+
+      width: '400px',
+      data : { title : "Delete Treatments ?", content : `Are you sure you want to delete these treatments ? This will delete all related orders who need these treatments.`}
+    })
+
+    dialogRef.afterClosed().subscribe((result : string) =>{
+      if(result=="yes"){
+      let errors = 0;
+      treatment.forEach((treatment) => {
+        this.jobService.deleteTreatment(treatment.id).subscribe({
+          error : (error : any ) => {
+            console.log("error during deleting treatment :"+treatment.description, error) 
+            errors++}
+        })    
+      })
+      if(errors == 0){ 
+        setTimeout(()=>{
+          this.getDataSource();
+        this.openSnackBar("Treatment list selected was deleted successfully.")
+        }, 2000)
+        }
+      }
+    })
   }
 
   applyFilter(event: Event) {

@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -13,11 +14,14 @@ import { JobService } from 'src/services/jobService';
   styleUrls: ['./stocks.component.css']
 })
 export class StocksComponent implements OnInit {
-  displayedColumns: string[] = [ 'id','name','type','quantity','createdAt', 'actions'];
+  displayedColumns: string[] = [ 'id','name','type','quantity','createdAt', 'actions','select'];
   resourcesDataSource: MatTableDataSource<Resource> = new MatTableDataSource<Resource>();
   paginatedData: MatTableDataSource<Resource> = new MatTableDataSource<Resource>();
   @ViewChild(MatPaginator) paginator: any;
   resourceList: Resource[] = [];
+  state : 'loading' | 'error' | 'ready' = 'loading';
+  selection = new SelectionModel<Resource>(true, []);
+  selectAllChecked = false;
 
   constructor(private jobService : JobService,
     private dialog : MatDialog,
@@ -36,8 +40,13 @@ export class StocksComponent implements OnInit {
         this.resourcesDataSource.data.push(...response);
         this.paginatedData = new MatTableDataSource<Resource>( this.resourcesDataSource.data.slice(0, 10))
         this.resourceList = response
+        this.state = 'ready';
       },
-      error: (error: any) => console.log('error during getAllResources:', error),
+      error: (error: any) => {
+        console.log('error during getAllResources:', error)
+        this.state = 'error';
+      },
+      
       complete :  () => {
         this.resourcesDataSource.paginator = this.paginator; 
       }
@@ -51,6 +60,58 @@ export class StocksComponent implements OnInit {
     this.paginatedData = new MatTableDataSource<Resource>(paginatedData);
   }
 
+  selectRow(checked: boolean, row: Resource): void {
+    if (checked) {
+      this.selection.select(row);
+    } else {
+      this.selection.deselect(row);
+    }
+  }
+  applyAction(action: string): void {
+    const selectedResources = this.selection.selected;
+    // Apply the action to selected tasks
+    switch (action) {
+      case 'Delete':
+        this.deleteResources(selectedResources);
+  
+    }
+  }
+
+  selectAllRows(): void {
+    if (this.selectAllChecked) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.paginatedData.data);
+    }
+    this.selectAllChecked = !this.selectAllChecked;
+  }
+
+  deleteResources(resource: Resource[]): void {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+
+      width: '400px',
+      data : { title : "Delete Resources ?", content : `Are you sure you want to delete these resources ? This will delete all related orders who need these resources.`}
+    })
+
+    dialogRef.afterClosed().subscribe((result : string) =>{
+      if(result=="yes"){
+      let errors = 0;
+      resource.forEach((resource) => {
+        this.jobService.deleteResource(resource.id).subscribe({
+          error : (error : any ) => {
+            console.log("error during deleting resource :"+resource.name, error) 
+            errors++}
+        })    
+      })
+      if(errors == 0){ 
+        setTimeout(()=>{
+          this.getDataSource();
+        this.openSnackBar("Resource list selected was deleted successfully.")
+        }, 2000)
+        }
+      }
+    })
+  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     // Custom filtering function

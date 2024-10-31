@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
   
 
   @Component({
@@ -230,13 +231,13 @@ import { MatDialog } from '@angular/material/dialog';
 
     getRateText(rate: number): string {
       if (rate > 95) {
-        return ' Very Good';
+        return 'very-good';
       } else if (rate > 75) {
-        return ' Pretty Good';
+        return 'pretty-good';
       } else if( rate > 50 ) {
-        return ' Average';
+        return 'average';
       }else{
-        return ' Bad';
+        return 'bad';
       }
     }
 
@@ -256,16 +257,26 @@ import { MatDialog } from '@angular/material/dialog';
       return tasks
       }
 
-      async generateNewPlanning(){
-        this.generating = true;
+    async generateNewPlanning(){
+      let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+
+        width: '400px',
+        data : { title : "Generate new planning ?", content : `Are you sure you want to generate a new planning ? This could take some times according to the numbers of undone orders that need to be scheduled. `}
+      });
+  
+      dialogRef.afterClosed().subscribe((result : string) =>{
+        if(result=="yes"){  
+          this.generating = true;
         this.jobService.makeNewPlanning().subscribe({
           next : (response) => {
             this.plannings.push(response)
-             },
+            },
           error : (error) => { console.log(error)},
           complete : () => { this.loadPlannings()}
-        })
-      }
+            })
+          }
+      })
+    }
   }
 
 

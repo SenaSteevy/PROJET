@@ -11,10 +11,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from 'src/services/authService';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private _snackBar : MatSnackBar
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -33,11 +35,11 @@ export class AuthInterceptor implements HttpInterceptor {
 
       return next.handle(authReq).pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 401 && error.error.error == 'Unauthorized') {
+          if (error.status === 401 || error.error.error == 'Unauthorized') {
             this.authService.clear();
             this.authService.sessionExpired = true;
             this.router.navigate(['/login']);
-            console.log('Session expired. Please log in again.');
+            this._snackBar.open('Session expired. Please log in again.');
           }
           return throwError(error);
         })
@@ -45,5 +47,11 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       return next.handle(request); // Proceed with original request
     }
+  }
+
+  openSnackBar(message : string) {
+    this._snackBar.open( message , '', {
+      duration: 2000
+    });
   }
 }

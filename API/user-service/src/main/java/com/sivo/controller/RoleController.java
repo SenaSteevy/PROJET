@@ -6,7 +6,9 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,5 +52,27 @@ public class RoleController {
 	@GetMapping("/permissions/getAll")
 	public ResponseEntity<List<Permission>> getAllPermissions() {
 		return roleService.getAllPermissions();
+	}
+	
+	@GetMapping("/getRoleByName/{rolename}")
+	public ResponseEntity<Role> getRoleByName(@PathVariable("rolename") String roleName) {
+		return roleService.getRoleByName(roleName);
+	}
+	
+	@PostMapping(value = {"/updateRoleById/{id}"})
+	public ResponseEntity<Role> updateRole(@PathVariable("id") Long id, @RequestBody RoleRequest roleRequest){
+			return roleService.updateRole(id, roleRequest);		
+	}
+	
+	@GetMapping("getById/{id}")
+	public ResponseEntity<?> findRoleById (@PathVariable("id") Long id) {
+		return roleService.findById(id);
+	}
+	
+
+	
+	@DeleteMapping("/deleteRoleById/{id}")
+	public ResponseEntity<?> deleteRoleById(@PathVariable("id") Long id){
+		return roleService.deleteRoleById(id);
 	}
 }

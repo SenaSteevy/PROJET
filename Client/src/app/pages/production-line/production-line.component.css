@@ -9,6 +9,17 @@
     width: 100%;
 }
 
+.error{
+    color:rgb(252, 30, 30);
+    text-align: center;
+    padding: 1.5rem 0rem;
+    font:18px bold;
+  }
+.empty{
+    font: 18px bold;
+    text-align: center;
+    padding: 1.5rem 0rem;
+}
 .order{
     display : flex;
     background-color: rgba(51, 92, 167, 0.884);

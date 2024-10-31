@@ -30,7 +30,7 @@
         
         <mat-form-field appearance="outline" >
           <mat-label>Gender</mat-label>
-          <mat-select name="Gender" formControlName="gender" >
+          <mat-select name="Gender" formControlName="gender"  >
             <mat-option value="Male">Male</mat-option>
             <mat-option value="Female">Female</mat-option>
           </mat-select>
@@ -38,40 +38,40 @@
 
         <mat-form-field appearance="outline" >
           <mat-label>First Name</mat-label>
-          <input matInput type="text" name="firstName" placeholder="first name" formControlName = "firstName" >
+          <input matInput type="text" name="firstName" placeholder="first name" formControlName = "firstName" [readonly]="isUsersPage" >
         </mat-form-field>
 
         <mat-form-field appearance="outline" >
           <mat-label>Last Name</mat-label>
-          <input matInput type="text" name="lastName" placeholder="last name" formControlName = "lastName">
+          <input matInput type="text" name="lastName" placeholder="last name" formControlName = "lastName" [readonly]="isUsersPage">
         </mat-form-field>
         
         <mat-form-field appearance="outline" >
           <mat-label>Email</mat-label>
-          <input matInput type="email" name="email" placeholder="email" formControlName = "email">
+          <input matInput type="email" name="email" placeholder="email" formControlName = "email" [readonly]="isUsersPage">
         </mat-form-field>
 
 
-        <mat-form-field appearance="outline" *ngIf="!user">
+        <mat-form-field appearance="outline">
           <mat-label>Password</mat-label>
-          <input matInput type="password" name="password" placeholder="password" formControlName = "password">
+          <input matInput type="password" name="password" placeholder="password" formControlName = "password" [readonly]="isUsersPage">
         </mat-form-field>
 
         
-        <mat-form-field appearance="outline"  *ngIf="!user" >
+        <mat-form-field appearance="outline"  >
           <mat-label>Confirm Password</mat-label>
-          <input matInput type="password" name="confirm-password" placeholder="confirm password" formControlName = "confirmPassword">
+          <input matInput type="password" name="confirm-password" placeholder="confirm password" formControlName = "confirmPassword" [readonly]="isUsersPage">
         </mat-form-field>
 
         <mat-form-field appearance="outline" >
           <mat-label>post</mat-label>
-          <input matInput type="text" name="post" placeholder="post at Sivo" formControlName = "post">
+          <input matInput type="text" name="post" placeholder="post at Sivo" formControlName = "post" [readonly]="isUsersPage">
         </mat-form-field>
       
-        <mat-form-field appearance="outline" *ngIf="!isProfile">
+        <mat-form-field appearance="outline" *ngIf="!isProfile" >
           <mat-label>Roles</mat-label>
-          <mat-select formControlName="role" placeholder="Role"  [compareWith]="compareRoles">
-            <mat-option *ngFor="let role of roleList" [value]="role"
+          <mat-select formControlName="role" placeholder="Role" >
+            <mat-option *ngFor="let role of roleList" [value]="role" 
               matTooltip="{{role.roleDescription}}"
               matTooltipPosition="right"
               matTooltipHideDelay="500"

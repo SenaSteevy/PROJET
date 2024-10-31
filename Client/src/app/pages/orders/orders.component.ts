@@ -11,6 +11,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-orders',
@@ -26,12 +27,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 })
 export class OrdersComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['numOrder', 'client', 'createdAt', 'dueDate', 'status'];
+  displayedColumns: string[] = ['select','numOrder', 'client', 'createdAt', 'dueDate', 'status'];
   displayedColumnsWithExpand : string[] = [...this.displayedColumns, 'expand']
   ordersDataSource: MatTableDataSource<Job> = new MatTableDataSource<Job>();
   paginatedData: MatTableDataSource<Job> = new MatTableDataSource<Job>();
   @ViewChild(MatPaginator) paginator: any;
   
+  state : 'loading' | 'error' | 'ready' = 'loading';
+  selection = new SelectionModel<Job>(true, []);
+  selectAllChecked = false;
+
   dueDateRate: any;
   doneRate: any;
   @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef;
@@ -127,8 +132,12 @@ export class OrdersComponent implements OnInit, AfterViewInit {
         this.ordersDataSource.data.push(...response);
         this.paginatedData = new MatTableDataSource<Job>( this.ordersDataSource.data.slice(0, 10))
         this.jobList = response
+        this.state = 'ready';
       },
-      error: (error: any) => console.log('error during getAllJobs:', error),
+      error: (error: any) => {
+        console.log('error during getAllJobs:', error);
+        this.state= 'error';
+      },
       complete : async () => {
         this.ordersDataSource.paginator = this.paginator;
           this.populateMonthsAndYears()
@@ -146,6 +155,59 @@ export class OrdersComponent implements OnInit, AfterViewInit {
     const endIndex = startIndex + event.pageSize;
     const paginatedData = this.ordersDataSource.data.slice(startIndex, endIndex);
     this.paginatedData = new MatTableDataSource<Job>(paginatedData);
+  }
+
+  selectRow(checked: boolean, row: Job): void {
+    if (checked) {
+      this.selection.select(row);
+    } else {
+      this.selection.deselect(row);
+    }
+  }
+  applyAction(action: string): void {
+    const selectedJobs = this.selection.selected;
+    // Apply the action to selected tasks
+    switch (action) {
+      case 'Delete':
+        this.deleteJobs(selectedJobs);
+  
+    }
+  }
+
+  selectAllRows(): void {
+    if (this.selectAllChecked) {
+      this.selection.clear();
+    } else {
+      this.selection.select(...this.paginatedData.data);
+    }
+    this.selectAllChecked = !this.selectAllChecked;
+  }
+
+  deleteJobs(job: Job[]): void {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+
+      width: '400px',
+      data : { title : "Delete Jobs ?", content : `Are you sure you want to delete these jobs ?`}
+    })
+
+    dialogRef.afterClosed().subscribe((result : string) =>{
+      if(result=="yes"){
+      let errors = 0;
+      job.forEach((job) => {
+        this.jobService.deleteJob(job.numOrder).subscribe({
+          error : (error : any ) => {
+            console.log("error during deleting job :"+job.description, error) 
+            errors++}
+        })    
+      })
+      if(errors == 0){ 
+        setTimeout(()=>{
+          this.getDataSource();
+        this.openSnackBar("Job list selected was deleted successfully.")
+        }, 3000)
+        }
+      }
+    })
   }
 
   applyFilter(event: Event) {

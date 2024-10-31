@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Phase, Timeslot } from 'src/models/Phase';
 import { JobService } from 'src/services/jobService';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 
 
 
@@ -66,13 +67,19 @@ timeslots = [
     endTime : "" ,
     enabled : false
   }
-]
+];
+stepperOrientation: 'horizontal' | 'vertical' = 'horizontal';
+
   constructor(private jobService : JobService,
     private router : Router,
     private dialog : MatDialog,
-    private _snackBar: MatSnackBar) { }
+    private _snackBar: MatSnackBar,
+    private breakpointObserver : BreakpointObserver) { }
 
   ngOnInit(): void {
+    this.breakpointObserver.observe(['(max-width: 1015px)']).subscribe((state: BreakpointState) => {
+      this.stepperOrientation = state.matches ? 'vertical' : 'horizontal';
+    });
     if (this.phase && this.phase.timeslotList) {
       this.timeslots.forEach((slot) => {
         const foundSlot = this.phase.timeslotList.find(

@@ -6,6 +6,12 @@
     height: fit-content;
     z-index: 2;
 }
+.error{
+  color:rgb(252, 30, 30);
+  text-align: center;
+  padding: 1.5rem 0rem;
+  font:18px bold;
+}
 .button{
   margin : 0.5rem 1rem;
   border-radius: 20px;

@@ -38,6 +38,9 @@ export class UserService {
     return this.httpClient.get<Role[]>(this.PATH_OF_API + 'user-service/roles/getAll');
   }
 
+  getRoleByName(roleName: string) {
+    return this.httpClient.get(`${this.PATH_OF_API}user-service/roles/getRoleByName/${roleName}`);
+  }
   createUser(data: any) {
     return this.httpClient.post(this.PATH_OF_API + 'user-service/users/registerNewUser', data);
   }
